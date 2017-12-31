@@ -5,7 +5,7 @@ MAINTAINER Jamie Cho version: 0.1
 RUN apt-get update
 RUN apt-get upgrade
 RUN apt-get install -y build-essential g++ bison flex curl fuse libfuse-dev markdown python ruby python-setuptools python-dev python-pip libmagickwand-dev
-RUN apt-get install -y vim mame-tools git dos2unix
+RUN apt-get install -y vim mame-tools git dos2unix ffmpeg
 
 # Install useful Python tools
 RUN pip install Pillow wand numpy pypng
