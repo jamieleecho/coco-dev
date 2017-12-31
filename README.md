@@ -6,6 +6,15 @@ applications. It implements a Docker image that includes the following tools:
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
 * [CMOC 0.1.45](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
 
+This also installs Python and Ruby as well as some useful Python packages.
+
+
+## Motivation
+This repo is motivated in part by the need to keep the tools in sync
+between different computers. Because the Dockerfile contains all of the
+dependencies in a single place creating and sharing a reproducible
+development environment becomes possible.
+
 
 ## Requirements
 * [macOS](https://www.apple.com/macos/high-sierra/) or

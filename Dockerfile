@@ -4,7 +4,10 @@ MAINTAINER Jamie Cho version: 0.1
 
 RUN apt-get update
 RUN apt-get upgrade
-RUN apt-get install -y build-essential g++ bison flex curl fuse libfuse-dev markdown
+RUN apt-get install -y build-essential g++ bison flex curl fuse libfuse-dev markdown python ruby python-setuptools python-dev python-pip libmagickwand-dev
+
+# Install useful Python tools
+RUN pip install Pillow wand numpy
 
 WORKDIR /root
 
