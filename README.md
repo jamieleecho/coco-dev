@@ -6,6 +6,7 @@ applications. It implements a Docker image that includes the following tools:
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
 * [CMOC 0.1.45](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
 * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
+* [milliluk-tools](https://github.com/milliluk/milliluk-tools)
 * Image conversion scripts by Mathieu Bouchard
 * Python and Ruby as well as some useful Python packages
 
@@ -48,7 +49,7 @@ your target folder and use typical development commands such as `lwasm`,
 # Start the Docker application if it is not already running
 git clone https://github.com/jamieleecho/coco-dev.git
 cd coco-dev
-docker-compose -f docker-compose.build build
+./build
 ```
 
 
