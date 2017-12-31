@@ -5,6 +5,7 @@ applications. It implements a Docker image that includes the following tools:
 * [LWTOOLS 4.14](http://lwtools.projects.l-w.ca)
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
 * [CMOC 0.1.45](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+* [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
 * Image conversion scripts by Mathieu Bouchard
 * Python and Ruby as well as some useful Python packages
 
