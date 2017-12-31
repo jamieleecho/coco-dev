@@ -5,8 +5,8 @@ applications. It implements a Docker image that includes the following tools:
 * [LWTOOLS 4.14](http://lwtools.projects.l-w.ca)
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
 * [CMOC 0.1.45](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
-
-This also installs Python and Ruby as well as some useful Python packages.
+* Image conversion scripts by Mathieu Bouchard
+* Python and Ruby as well as some useful Python packages
 
 
 ## Motivation
@@ -29,20 +29,25 @@ On Mac systems you must share `/Users` with Docker. To do this:
 * Click `Apply & Restart`
 
 
-## Building coco-dev
-```
-git clone https://github.com/jamieleecho/coco-dev.git
-cd coco-dev
-docker-compose build
-```
-
-
 ## Using coco-dev
 ```
+# Start the Docker application if it is not already running
+git clone https://github.com/jamieleecho/coco-dev.git
+cd coco-dev
 ./coco-dev
 ```
 
 This will create a Linux shell in your home directory. You can `cd` into
 your target folder and use typical development commands such as `lwasm`,
 `lwlink`, `decb`, `os9` and `cmoc`
+
+
+## Building coco-dev
+```
+# Start the Docker application if it is not already running
+git clone https://github.com/jamieleecho/coco-dev.git
+cd coco-dev
+docker-compose -f docker-compose.build build
+```
+
 

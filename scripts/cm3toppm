@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+# cm3toppm - decoder for cm3 (CoCoMax 3) format
+# Copyright (c) 2017 by Mathieu Bouchard
+# reads cm3 from stdin, outputs ppm that can be piped
+# to cjpeg (.jpg) from jpeg-tools, or to pnmtopng (.png) from netpbm.
+
+def debug(x) STDERR.puts x end
+def dump(x) c=$palette[x]; STDOUT.write [(c[5]*2+c[2])*85,(c[4]*2+c[1])*85,(c[3]*2+c[0])*85].pack("ccc") end
+f=STDIN; f.set_encoding("ASCII-8BIT")
+cols=320; pictyp=f.read(1).ord; rows=(pictyp[7]+1)*192; sans_motifs=pictyp[0]!=0
+debug "#{cols}x#{rows}, 16 couleurs, sans_motifs=#{sans_motifs}"
+$palette=[]; 16.times {$palette<<f.read(1).ord}
+anirat=f.read(1).ord
+cycrat=f.read(1).ord
+cm3cyc=[]; 8.times {cm3cyc<<f.read(1).ord}
+aniflg=f.read(1).ord[7]!=0
+cycflg=f.read(1).ord[7]!=0
+debug "palette=#{$palette.inspect}"
+debug "cm3cyc=#{cm3cyc.inspect} cycrat=#{cycrat} cycflg=#{cycflg} anirat=#{anirat} aniflg=#{aniflg}"
+f.read(243) if not sans_motifs
+linbuf=Array.new(160,0); buff1=Array.new(20,0); buff2=Array.new(20,0)
+puts "P6\n#{cols} #{rows}\n255\n"
+(pictyp[7]+1).times {
+   lines=f.read(1).ord
+   lines.times {
+     u=0; y=0; bitu=7; bity=7; x=0; a=nil
+     contr=f.read(1).ord
+     if contr<128
+       20   .times {|i| buff1[i]=f.read(1).ord }
+       contr.times {|i| buff2[i]=f.read(1).ord }
+     end
+     160.times {
+       if contr>=128; a = f.read(1).ord
+       else
+         cc=buff1[u][bitu]; bitu-=1; if bitu<0; bitu=7; u+=1 end
+         if cc==0; a=linbuf[(x-1)%160]
+         else
+           cc=buff2[y][bity]; bity-=1; if bity<0; bity=7; y+=1 end
+           if cc==0; a=linbuf[x] else a=f.read(1).ord end
+         end
+       end
+       linbuf[x]=a; dump a>>4; dump a&15; x+=1
+     }
+   }
+}
+extra=0; extra+=1 while f.read(1); debug "#{extra} octets de trop" if extra>0

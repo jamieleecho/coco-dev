@@ -25,3 +25,6 @@ RUN (cd toolshed-2.2/build/unix/ && make && make install)
 RUN curl http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.45.tar.gz -o cmoc-0.1.45.tar.gz
 RUN tar -zxpvf cmoc-0.1.45.tar.gz
 RUN (cd cmoc-0.1.45 && ./configure && make -j && make install)
+
+# Install coco image conversion scripts
+COPY scripts/* /usr/local/bin/
