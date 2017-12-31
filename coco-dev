@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case "$(uname -s)" in
+
+   Darwin)
+     docker-compose -f docker-compose.mac.yml run -w $HOME coco-dev bash
+     ;;
+
+   Linux)
+     docker-compose -f docker-compose.yml run -w $HOME coco-dev bash
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*)
+     echo 'MS Windows not supported yet'
+     ;;
+
+   # Add here more strings to compare
+   # See correspondence table at the bottom of this answer
+
+   *)
+     echo 'Unknown OS not supported' 
+     ;;
+esac
+

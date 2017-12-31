@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  coco-dev:
+    build: .
+    environment:
+     - HOME=$HOME
+    volumes:
+     - /home:/home
