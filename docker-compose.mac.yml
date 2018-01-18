@@ -2,7 +2,7 @@ version: '3'
 
 services:
   coco-dev:
-    image: jamieleecho/coco-dev:0.2
+    image: jamieleecho/coco-dev:0.3
     environment:
      - HOME=$HOME
     volumes:
