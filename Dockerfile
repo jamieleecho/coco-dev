@@ -23,9 +23,9 @@ RUN apt-get install -y toolshed=2.2-0~tormod
 
 # Install CMOC directly from source
 WORKDIR /root
-ADD https://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.46.tar.gz .
-RUN tar -zxpvf cmoc-0.1.46.tar.gz
-WORKDIR /root/cmoc-0.1.46
+ADD https://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.47.tar.gz .
+RUN tar -zxpvf cmoc-0.1.47.tar.gz
+WORKDIR /root/cmoc-0.1.47
 RUN ./configure
 RUN make
 RUN make install
