@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.3
+MAINTAINER Jamie Cho version: 0.5
 
 # Setup sources
 RUN apt-get update
@@ -23,12 +23,13 @@ RUN apt-get install -y toolshed=2.2-0~tormod
 
 # Install CMOC directly from source
 WORKDIR /root
-ADD https://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.47.tar.gz .
-RUN tar -zxpvf cmoc-0.1.47.tar.gz
-WORKDIR /root/cmoc-0.1.47
+ADD https://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.48.tar.gz .
+RUN tar -zxpvf cmoc-0.1.48.tar.gz
+WORKDIR /root/cmoc-0.1.48
 RUN ./configure
 RUN make
 RUN make install
+WORKDIR /root
 
 # Install useful Python tools
 RUN pip install Pillow wand numpy pypng
@@ -41,3 +42,6 @@ RUN git config --global core.autocrlf input
 RUN git clone https://github.com/milliluk/milliluk-tools.git
 RUN (cd milliluk-tools && git checkout 454e7247c892f7153136b9e5e6b12aeeecc9dd36 && dos2unix < cgp220/cgp220.py > /usr/local/bin/cgp220.py && dos2unix < max2png/max2png.py > /usr/local/bin/max2png.py)
 RUN chmod a+x /usr/local/bin/cgp220.py /usr/local/bin/max2png.py 
+
+# Clean up
+RUN apt-get clean
