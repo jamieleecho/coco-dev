@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.6
+MAINTAINER Jamie Cho version: 0.7
 
 # Setup sources
 RUN apt-get update
@@ -19,7 +19,7 @@ RUN apt-get install -y vim mame-tools git dos2unix ffmpeg
 RUN apt-get install -y gcc6809=4.6.4-0~lw9a~trusty
 RUN apt-get install -y lwtools=4.15-0~tormod~trusty
 RUN apt-get install -y toolshed=2.2-0~tormod
-RUN apt-get install -y cmoc=0.1.49-0~tormod
+RUN apt-get install -y cmoc=0.1.50-0~tormod
 
 # Install useful Python tools
 RUN pip install Pillow wand numpy pypng
@@ -34,9 +34,9 @@ RUN (cd milliluk-tools && git checkout 454e7247c892f7153136b9e5e6b12aeeecc9dd36 
 RUN chmod a+x /usr/local/bin/cgp220.py /usr/local/bin/max2png.py 
 
 # Install boisy/cmoc_os9
-RUN git clone https://github.com/boisy/cmoc_os9.git
+RUN git clone https://github.com/jamieleecho/cmoc_os9.git
 WORKDIR cmoc_os9/lib
-RUN git checkout 6ef6840352e89a273d89179fab016349186ce080
+RUN git checkout b70df147169a9d76d88c1cd8114ada035ec15f62
 RUN make
 WORKDIR ../cgfx
 RUN make
