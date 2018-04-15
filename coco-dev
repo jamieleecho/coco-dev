@@ -3,11 +3,11 @@
 case "$(uname -s)" in
 
    Darwin)
-     docker-compose -f docker-compose.mac.yml run --rm -w $HOME coco-dev bash
+     docker-compose -f docker-compose.yml run --rm -w /home/$USER coco-dev bash
      ;;
 
    Linux)
-     docker-compose -f docker-compose.yml run --rm -w $HOME coco-dev bash
+     docker-compose -f docker-compose.yml run --rm -w /home/$USER coco-dev bash
      ;;
 
    CYGWIN*|MINGW32*|MSYS*)
