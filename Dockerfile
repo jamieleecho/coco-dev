@@ -35,7 +35,7 @@ RUN (cd milliluk-tools && git checkout 454e7247c892f7153136b9e5e6b12aeeecc9dd36 
 RUN chmod a+x /usr/local/bin/cgp220.py /usr/local/bin/max2png.py 
 
 # Install boisy/cmoc_os9
-RUN git clone https://github.com/jamieleecho/cmoc_os9.git
+RUN git clone https://github.com/tlindner/cmoc_os9.git
 WORKDIR cmoc_os9/lib
 RUN git checkout b70df147169a9d76d88c1cd8114ada035ec15f62
 RUN make
