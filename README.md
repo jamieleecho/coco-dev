@@ -4,14 +4,14 @@ Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 * [LWTOOLS 4.15](http://lwtools.projects.l-w.ca)
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
-* [CMOC 0.1.52](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+* [CMOC 0.1.53](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
 * [gcc6809](https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809)
 * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
 * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
 * [tlinder/cmoc\_os9](https://github.com/tlinder/cmoc_os9)
 * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
 * [naken](http://www.mikekohn.net/micro/naken_asm.php)
-* Image conversion scripts by Mathieu Bouchard
+* [coco-tools](https://github.com/jamieleecho/coco-tools)
 * Python and Ruby as well as some useful Python packages
 
 
