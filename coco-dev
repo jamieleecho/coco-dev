@@ -1,13 +1,20 @@
- #!/usr/bin/env sh
+#!/usr/bin/env sh
+
+
+if [[ $* = *[!\ ]* ]]; then
+  params=( -c "$*" )
+else
+  params=()
+fi
 
 case "$(uname -s)" in
 
    Darwin)
-     docker-compose -f docker-compose.yml run --rm -w /home/$USER coco-dev bash
+     docker-compose -f docker-compose.yml run --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` coco-dev bash "${params[@]}"
      ;;
 
    Linux)
-     docker-compose -f docker-compose.yml run --rm -w /home/$USER coco-dev bash
+     docker-compose -f docker-compose.yml run --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` coco-dev bash "${params[@]}"
      ;;
 
    CYGWIN*|MINGW32*|MSYS*)
