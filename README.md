@@ -11,7 +11,7 @@ applications. It implements a Docker image that includes the following tools:
 * [tlinder/cmoc\_os9](https://github.com/tlinder/cmoc_os9)
 * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
 * [naken](http://www.mikekohn.net/micro/naken_asm.php)
-* [coco-tools](https://github.com/jamieleecho/coco-tools)
+* [coco-tools 0.2](https://github.com/jamieleecho/coco-tools)
 * Python and Ruby as well as some useful Python packages
 
 
