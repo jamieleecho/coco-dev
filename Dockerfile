@@ -38,7 +38,7 @@ RUN add-apt-repository ppa:tormodvolden/m6809
 RUN echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-  cmoc=0.1.53-0~tormod \
+  cmoc=0.1.55-0~tormod \
   gcc6809=4.6.4-0~lw9a~trusty \
   lwtools=4.15-0~tormod~trusty \
   toolshed=2.2-0~tormod
