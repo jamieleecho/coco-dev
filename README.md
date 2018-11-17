@@ -8,7 +8,7 @@ applications. It implements a Docker image that includes the following tools:
 * [gcc6809](https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809)
 * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
 * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
-* [tlinder/cmoc\_os9](https://github.com/tlinder/cmoc_os9)
+* [tlindner/cmoc\_os9](https://github.com/tlindner/cmoc_os9)
 * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
 * [naken](http://www.mikekohn.net/micro/naken_asm.php)
 * [coco-tools 0.2](https://github.com/jamieleecho/coco-tools)
