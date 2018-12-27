@@ -1,9 +1,9 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.10
+MAINTAINER Jamie Cho version: 0.12
 
 # Setup sources
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   bison \
   build-essential \
   curl \
@@ -38,9 +38,9 @@ RUN add-apt-repository ppa:tormodvolden/m6809
 RUN echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-  cmoc=0.1.55-0~tormod \
+  cmoc=0.1.56-0~tormod \
   gcc6809=4.6.4-0~lw9a~trusty \
-  lwtools=4.15-0~tormod~trusty \
+  lwtools=4.16-0~tormod~trusty \
   toolshed=2.2-0~tormod
 
 # Install CoCo image conversion scripts
@@ -76,11 +76,12 @@ WORKDIR ..
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder
 WORKDIR naken_asm
-RUN git checkout 201acd7885bd6e31d5ca7001d6aa643b911913f3 && \
+RUN git checkout d646de9731302e6187f0199304b8a640282326ef && \
   ./configure && make && make install
 WORKDIR ../java_grinder
-RUN git checkout ae67d7c11bc94059b1d15c6b18eca06975ec92c0 && \
-  make && cp java_grinder /usr/local/bin/
+RUN git checkout a9bcc8f4c4856d64356f50bc0b6234359977cb43 && \
+  make && \
+  cp java_grinder /usr/local/bin/
 WORKDIR ..
 
 # Clean up
