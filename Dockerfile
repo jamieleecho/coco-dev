@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.12
+MAINTAINER Jamie Cho version: 0.13
 
 # Setup sources
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
@@ -76,11 +76,12 @@ WORKDIR ..
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder
 WORKDIR naken_asm
-RUN git checkout d646de9731302e6187f0199304b8a640282326ef && \
+RUN git checkout c6dcf7b89ddeed3fd6b5a1cec711d23c4ede9665 && \
   ./configure && make && make install
 WORKDIR ../java_grinder
-RUN git checkout a9bcc8f4c4856d64356f50bc0b6234359977cb43 && \
-  make && \
+RUN git checkout bc9dd9628e3b145f1ee7b1d46a8674fe92d52610 && \
+  make && make java && \
+  (cd samples/trs80_coco && make grind) && \
   cp java_grinder /usr/local/bin/
 WORKDIR ..
 
@@ -89,3 +90,6 @@ RUN apt-get clean
 
 # Convenience for Mac users
 RUN ln -s /home /Users
+
+# For java_grinder
+ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar
