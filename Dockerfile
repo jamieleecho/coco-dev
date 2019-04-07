@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.13
+MAINTAINER Jamie Cho version: 0.14
 
 # Setup sources
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
@@ -34,62 +34,64 @@ RUN pip install \
   wand
 
 # Install CoCo Specific stuff
-RUN add-apt-repository ppa:tormodvolden/m6809
-RUN echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
-  echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-  cmoc=0.1.56-0~tormod \
+RUN add-apt-repository ppa:tormodvolden/m6809 && \
+  echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
+  echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
+  apt-get update && apt-get upgrade -y && apt-get install -y \
   gcc6809=4.6.4-0~lw9a~trusty \
   lwtools=4.16-0~tormod~trusty \
   toolshed=2.2-0~tormod
 
-# Install CoCo image conversion scripts
+# Install cmoc
 WORKDIR /root
+RUN curl http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.58.tar.gz -o cmoc.tar.gz && \
+  tar -zxpvf cmoc.tar.gz && \
+  (cd cmoc-0.1.58 && \
+  ./configure && \
+  make && \
+  make install)
+
+# Install CoCo image conversion scripts
 RUN git config --global core.autocrlf input && \
   git clone https://github.com/jamieleecho/coco-tools.git && \
   (cd coco-tools && python setup.py install)
 
 # Install milliluk-tools
-WORKDIR /root
 RUN git config --global core.autocrlf input && \
   git clone https://github.com/milliluk/milliluk-tools.git && \
   (cd milliluk-tools && git checkout 454e7247c892f7153136b9e5e6b12aeeecc9dd36 && \
   dos2unix < cgp220/cgp220.py > /usr/local/bin/cgp220.py && \
   chmod a+x /usr/local/bin/cgp220.py)
 
-# Install boisy/cmoc_os9
-RUN git clone https://github.com/tlindner/cmoc_os9.git
-WORKDIR cmoc_os9/lib
-RUN git checkout 9f9dfda1406d152f137131f0670c94d105b9b072 && \
-  make
-WORKDIR ../cgfx
-RUN make
-WORKDIR ..
-RUN mkdir -p /usr/share/cmoc/lib/os9 && \
+# Install tlidner/cmoc_os9
+RUN git clone https://github.com/tlindner/cmoc_os9.git && \
+  (cd cmoc_os9/lib && \
+  git checkout 9f9dfda1406d152f137131f0670c94d105b9b072 && \
+  make && \
+  cd ../cgfx && \
+  make && \
+  cd .. && \
+  mkdir -p /usr/share/cmoc/lib/os9 && \
   mkdir -p /usr/share/cmoc/include/os9/cgfx && \
   cp lib/libc.a cgfx/libcgfx.a /usr/share/cmoc/lib/os9 && \
   cp -R include/* /usr/share/cmoc/include/os9 && \
-  cp -R cgfx/include/* /usr/share/cmoc/include/os9
-WORKDIR ..
+  cp -R cgfx/include/* /usr/share/cmoc/include/os9)
 
 # Install java grinder
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
-  git clone https://github.com/mikeakohn/java_grinder
-WORKDIR naken_asm
-RUN git checkout c6dcf7b89ddeed3fd6b5a1cec711d23c4ede9665 && \
-  ./configure && make && make install
-WORKDIR ../java_grinder
-RUN git checkout bc9dd9628e3b145f1ee7b1d46a8674fe92d52610 && \
+  git clone https://github.com/mikeakohn/java_grinder && \
+  (cd naken_asm && \
+  git checkout 03f5d7aa28ed92714aea6b83ddcbcba4842009f2 && \
+  ./configure && make && make install && \
+  cd ../java_grinder && \
+  git checkout d24d79e6f9820e3ece3aa7aa38b1bedfb031f5e7 && \
   make && make java && \
   (cd samples/trs80_coco && make grind) && \
-  cp java_grinder /usr/local/bin/
-WORKDIR ..
+  cp java_grinder /usr/local/bin/)
 
 # Clean up
-RUN apt-get clean
-
-# Convenience for Mac users
-RUN ln -s /home /Users
+RUN apt-get clean && \
+  ln -s /home /Users
 
 # For java_grinder
 ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar
