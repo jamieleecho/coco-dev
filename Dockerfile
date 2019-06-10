@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.14
+MAINTAINER Jamie Cho version: 0.15
 
 # Setup sources
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
@@ -39,14 +39,14 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   apt-get update && apt-get upgrade -y && apt-get install -y \
   gcc6809=4.6.4-0~lw9a~trusty \
-  lwtools=4.16-0~tormod~trusty \
+  lwtools=4.17-0~tormod~~trusty \
   toolshed=2.2-0~tormod
 
 # Install cmoc
 WORKDIR /root
-RUN curl http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.58.tar.gz -o cmoc.tar.gz && \
+RUN curl http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.59.tar.gz -o cmoc.tar.gz && \
   tar -zxpvf cmoc.tar.gz && \
-  (cd cmoc-0.1.58 && \
+  (cd cmoc-0.1.59 && \
   ./configure && \
   make && \
   make install)
@@ -81,7 +81,7 @@ RUN git clone https://github.com/tlindner/cmoc_os9.git && \
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
   (cd naken_asm && \
-  git checkout 03f5d7aa28ed92714aea6b83ddcbcba4842009f2 && \
+  git checkout d6f2440a712c5b0df1394c669dbb8ed13eb715a0 && \
   ./configure && make && make install && \
   cd ../java_grinder && \
   git checkout d24d79e6f9820e3ece3aa7aa38b1bedfb031f5e7 && \
