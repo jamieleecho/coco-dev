@@ -1,20 +1,22 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 
 if [[ $* = *[!\ ]* ]]; then
-  params=( -c "$*" )
+  params=( "$*" )
 else
-  params=()
+  params=( bash )
 fi
+
+COCO_DEV_IMAGE=jamieleecho/coco-dev:0.15
 
 case "$(uname -s)" in
 
    Darwin)
-     docker-compose -f docker-compose.yml run --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` coco-dev bash "${params[@]}"
+     docker run -it --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` -v $HOME/..:/home -e HOME=/home/$USER ${COCO_DEV_IMAGE} ${params[@]}
      ;;
 
    Linux)
-     docker-compose -f docker-compose.yml run --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` coco-dev bash "${params[@]}"
+     docker run -it --rm -w `pwd` -v $HOME/..:/home -e HOME=/home/$USER ${COCO_DEV_IMAGE} ${params[@]}
      ;;
 
    CYGWIN*|MINGW32*|MSYS*)

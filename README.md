@@ -39,8 +39,7 @@ On Mac systems you must share `/Users` with Docker. To do this:
 ```
 # Start the Docker application if it is not already running
 git clone https://github.com/jamieleecho/coco-dev.git
-cd coco-dev
-./coco-dev
+coco-dev/coco-dev
 ```
 This will create a Linux shell in your home directory. You can `cd` into
 your target folder and use typical development commands such as `lwasm`,
