@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.15
+MAINTAINER Jamie Cho version: 0.16
 
 # Setup sources
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
@@ -28,28 +28,20 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 
 # Install useful Python tools
 RUN pip install \
-  numpy \
-  Pillow \
-  pypng \
-  wand
+  numpy==1.16.5 \
+  Pillow==6.2.0 \
+  pypng==0.0.20 \
+  wand==0.5.7
 
 # Install CoCo Specific stuff
 RUN add-apt-repository ppa:tormodvolden/m6809 && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   apt-get update && apt-get upgrade -y && apt-get install -y \
+  cmoc=0.1.60-0~tormod \
   gcc6809=4.6.4-0~lw9a~trusty \
   lwtools=4.17-0~tormod~~trusty \
   toolshed=2.2-0~tormod
-
-# Install cmoc
-WORKDIR /root
-RUN curl http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.59.tar.gz -o cmoc.tar.gz && \
-  tar -zxpvf cmoc.tar.gz && \
-  (cd cmoc-0.1.59 && \
-  ./configure && \
-  make && \
-  make install)
 
 # Install CoCo image conversion scripts
 RUN git config --global core.autocrlf input && \
@@ -81,10 +73,10 @@ RUN git clone https://github.com/tlindner/cmoc_os9.git && \
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
   (cd naken_asm && \
-  git checkout d6f2440a712c5b0df1394c669dbb8ed13eb715a0 && \
+  git checkout e9ad7c8181c39ed09bde0d9fd1c285a2ee97edd7 && \
   ./configure && make && make install && \
   cd ../java_grinder && \
-  git checkout d24d79e6f9820e3ece3aa7aa38b1bedfb031f5e7 && \
+  git checkout b3ef7b33343fd877573af5f63502393ffe31f9ab && \
   make && make java && \
   (cd samples/trs80_coco && make grind) && \
   cp java_grinder /usr/local/bin/)
