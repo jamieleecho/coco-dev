@@ -1,6 +1,9 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.16
+MAINTAINER Jamie Cho version: 0.17
+
+# Store stuff in a semi-reasonable spot
+WORKDIR /root
 
 # Setup sources
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
@@ -38,7 +41,7 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   apt-get update && apt-get upgrade -y && apt-get install -y \
-  cmoc=0.1.60-0~tormod \
+  cmoc=0.1.61-0~tormod \
   gcc6809=4.6.4-0~lw9a~trusty \
   lwtools=4.17-0~tormod~~trusty \
   toolshed=2.2-0~tormod
