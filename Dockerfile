@@ -1,40 +1,56 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.17
+MAINTAINER Jamie Cho version: 0.18
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
 
 # Setup sources
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-  bison \
-  build-essential \
-  curl \
-  default-jdk \
-  dos2unix \
-  ffmpeg \
-  flex \
-  fuse \
-  g++ \
-  git \
-  libfuse-dev \
-  libmagickwand-dev \
-  mame-tools \
-  markdown \
-  python \
-  python-dev \
-  python-pip \
-  python-setuptools \
-  ruby \
-  software-properties-common \
-  vim
+RUN apt-get update && \
+  apt-get install -y software-properties-common && \
+  add-apt-repository ppa:deadsnakes/ppa && \
+  apt-get update -y && \
+  apt-get upgrade -y && \
+  apt-get install -y \
+    bison \
+    build-essential \
+    curl \
+    default-jdk \
+    dos2unix \
+    ffmpeg \
+    flex \
+    fuse \
+    g++ \
+    git \
+    libfuse-dev \
+    libmagickwand-dev \
+    mame-tools \
+    markdown \
+    python \
+    python-dev \
+    python-pip \
+    python3.6 \
+    python3.6-dev \
+    ruby \
+    software-properties-common \
+    vim
 
 # Install useful Python tools
-RUN pip install \
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 && \
+  curl https://bootstrap.pypa.io/get-pip.py | python3
+RUN pip2 install \
   numpy==1.16.5 \
   Pillow==6.2.0 \
   pypng==0.0.20 \
+  setuptools==41.6.0 \
   wand==0.5.7
+RUN pip3 install \
+  numpy==1.16.5 \
+  Pillow==6.2.0 \
+  pypng==0.0.20 \
+  setuptools==46.1.1 \
+  wand==0.5.7
+RUN ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-35m-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.cpython-36m-x86_64-linux-gnu.so
 
 # Install CoCo Specific stuff
 RUN add-apt-repository ppa:tormodvolden/m6809 && \
@@ -46,10 +62,16 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   lwtools=4.17-0~tormod~~trusty \
   toolshed=2.2-0~tormod
 
+# Make python3 the default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
+  update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
+
 # Install CoCo image conversion scripts
 RUN git config --global core.autocrlf input && \
   git clone https://github.com/jamieleecho/coco-tools.git && \
-  (cd coco-tools && python setup.py install)
+  (cd coco-tools && git checkout python2-3-fixes) && \
+  (cd coco-tools && python2 setup.py  install) && \
+  (cd coco-tools && python3 setup.py install)
 
 # Install milliluk-tools
 RUN git config --global core.autocrlf input && \
