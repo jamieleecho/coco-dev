@@ -57,10 +57,14 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
   apt-get update && apt-get upgrade -y && apt-get install -y \
-  cmoc=0.1.61-0~tormod \
   gcc6809=4.6.4-0~lw9a~trusty \
   lwtools=4.17-0~tormod~~trusty \
   toolshed=2.2-0~tormod
+
+# Install CMOC
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.63.tar.gz cmoc-0.1.63.tar.gz
+RUN tar -zxpvf cmoc-0.1.63.tar.gz && \
+  (cd cmoc-0.1.63 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
@@ -69,7 +73,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 &&
 # Install CoCo image conversion scripts
 RUN git config --global core.autocrlf input && \
   git clone https://github.com/jamieleecho/coco-tools.git && \
-  (cd coco-tools && git checkout python2-3-fixes) && \
+  (cd coco-tools && git checkout 0.3) && \
   (cd coco-tools && python2 setup.py  install) && \
   (cd coco-tools && python3 setup.py install)
 
@@ -81,9 +85,9 @@ RUN git config --global core.autocrlf input && \
   chmod a+x /usr/local/bin/cgp220.py)
 
 # Install tlidner/cmoc_os9
-RUN git clone https://github.com/tlindner/cmoc_os9.git && \
+RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
   (cd cmoc_os9/lib && \
-  git checkout 9f9dfda1406d152f137131f0670c94d105b9b072 && \
+  git checkout fix-cmoc-error && \
   make && \
   cd ../cgfx && \
   make && \
