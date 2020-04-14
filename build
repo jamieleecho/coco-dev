@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 docker-compose -f docker-compose.build.yml build
-docker tag coco-dev_coco-dev:latest jamieleecho/coco-dev:0.18
+docker tag coco-dev_coco-dev:latest jamieleecho/coco-dev:0.19
 

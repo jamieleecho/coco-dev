@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.18
+MAINTAINER Jamie Cho version: 0.19
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
@@ -62,9 +62,9 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   toolshed=2.2-0~tormod
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.63.tar.gz cmoc-0.1.63.tar.gz
-RUN tar -zxpvf cmoc-0.1.63.tar.gz && \
-  (cd cmoc-0.1.63 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.64.tar.gz cmoc-0.1.64.tar.gz
+RUN tar -zxpvf cmoc-0.1.64.tar.gz && \
+  (cd cmoc-0.1.64 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
@@ -84,7 +84,7 @@ RUN git config --global core.autocrlf input && \
   dos2unix < cgp220/cgp220.py > /usr/local/bin/cgp220.py && \
   chmod a+x /usr/local/bin/cgp220.py)
 
-# Install tlidner/cmoc_os9
+# Install tlindner/cmoc_os9
 RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
   (cd cmoc_os9/lib && \
   git checkout fix-cmoc-error && \
