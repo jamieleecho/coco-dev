@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Jamie Cho version: 0.21
+MAINTAINER Jamie Cho version: 0.22
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
@@ -62,9 +62,9 @@ RUN add-apt-repository ppa:tormodvolden/m6809 && \
   toolshed=2.2-0~tormod
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.66.tar.gz cmoc-0.1.66.tar.gz
-RUN tar -zxpvf cmoc-0.1.66.tar.gz && \
-  (cd cmoc-0.1.66 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.68.tar.gz cmoc-0.1.68.tar.gz
+RUN tar -zxpvf cmoc-0.1.68.tar.gz && \
+  (cd cmoc-0.1.68 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
@@ -102,10 +102,10 @@ RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
   (cd naken_asm && \
-  git checkout e9ad7c8181c39ed09bde0d9fd1c285a2ee97edd7 && \
+  git checkout aa692552769c831cf4f937915bb96f618fc04e7e && \
   ./configure && make && make install && \
   cd ../java_grinder && \
-  git checkout b3ef7b33343fd877573af5f63502393ffe31f9ab && \
+  git checkout 3aac128792d3293270e19b28d9da6c0b99423fab && \
   make && make java && \
   (cd samples/trs80_coco && make grind) && \
   cp java_grinder /usr/local/bin/)
