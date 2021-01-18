@@ -12,6 +12,8 @@ applications. It implements a Docker image that includes the following tools:
 * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
 * [naken](http://www.mikekohn.net/micro/naken_asm.php)
 * [coco-tools 0.3](https://github.com/jamieleecho/coco-tools)
+* [tasm6801](https://github.com/gregdionne/tasm6801)
+* [mcbasic](https://github.com/gregdionne/mcbasic)
 * Python and Ruby as well as some useful Python packages
 
 

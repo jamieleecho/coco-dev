@@ -1,6 +1,6 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
-MAINTAINER Jamie Cho version: 0.22
+MAINTAINER Jamie Cho version: 0.23
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
@@ -9,6 +9,8 @@ WORKDIR /root
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
   add-apt-repository ppa:deadsnakes/ppa && \
+  add-apt-repository ppa:ubuntu-toolchain-r/test && \
+  add-apt-repository ppa:tormodvolden/m6809 && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
@@ -20,12 +22,14 @@ RUN apt-get update && \
     ffmpeg \
     flex \
     fuse \
-    g++ \
+    g++-10 \
     git \
+    imagemagick \
     libfuse-dev \
     libmagickwand-dev \
     mame-tools \
     markdown \
+    mercurial \
     python \
     python-dev \
     python-pip \
@@ -50,16 +54,17 @@ RUN pip3 install \
   pypng==0.0.20 \
   setuptools==46.1.1 \
   wand==0.5.7
-RUN ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-35m-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.cpython-36m-x86_64-linux-gnu.so
 
 # Install CoCo Specific stuff
-RUN add-apt-repository ppa:tormodvolden/m6809 && \
-  echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu trusty main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
-  echo deb http://ppa.launchpad.net/tormodvolden/m6809/ubuntu precise main >> /etc/apt/sources.list.d/tormodvolden-m6809-trusty.list && \
-  apt-get update && apt-get upgrade -y && apt-get install -y \
-  gcc6809=4.6.4-0~lw9a~trusty \
-  lwtools=4.17-0~tormod~~trusty \
-  toolshed=2.2-0~tormod
+RUN apt-get install -y \
+  gcc6809=4.6.4-0~lw9a1~bionic3 \
+  lwtools=4.17-0~tormod~bionic
+
+# Install Toolshed
+RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
+  (cd toolshed-code && \
+   hg up v2_2 && \
+   make -C build/unix install CC=gcc)
 
 # Install CMOC
 ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.68.tar.gz cmoc-0.1.68.tar.gz
@@ -92,11 +97,11 @@ RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
   cd ../cgfx && \
   make && \
   cd .. && \
-  mkdir -p /usr/share/cmoc/lib/os9 && \
-  mkdir -p /usr/share/cmoc/include/os9/cgfx && \
-  cp lib/libc.a cgfx/libcgfx.a /usr/share/cmoc/lib/os9 && \
-  cp -R include/* /usr/share/cmoc/include/os9 && \
-  cp -R cgfx/include/* /usr/share/cmoc/include/os9)
+  mkdir -p /usr/local/share/cmoc/lib/os9 && \
+  mkdir -p /usr/local/share/cmoc/include/os9/cgfx && \
+  cp lib/libc.a cgfx/libcgfx.a /usr/local/share/cmoc/lib/os9 && \
+  cp -R include/* /usr/local/share/cmoc/include/os9 && \
+  cp -R cgfx/include/* /usr/local/share/cmoc/include/os9)
 
 # Install java grinder
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
@@ -110,9 +115,23 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   (cd samples/trs80_coco && make grind) && \
   cp java_grinder /usr/local/bin/)
 
+# Install tasm and mcbasic
+RUN git clone https://github.com/gregdionne/tasm6801.git && \
+  git clone https://github.com/gregdionne/mcbasic.git && \
+  (cd tasm6801 && \
+  git checkout edf31f10d5a9a2d093d83c3a501e65348f19a223 && \
+  cd src && \
+  g++ *.cpp -o tasm6801 && \
+  cp tasm6801 /usr/local/bin) && \
+  (cd mcbasic && \
+  git checkout f378f03a8132fcb74cb424d14230e7161c1af217 && \
+  cd src && \
+  g++-10 -std=c++20 *.cpp -o mcbasic && \
+  cp mcbasic /usr/local/bin)
+
 # Clean up
-RUN apt-get clean && \
-  ln -s /home /Users
+RUN ln -s /home /Users && \
+    apt-get clean
 
 # For java_grinder
 ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar
