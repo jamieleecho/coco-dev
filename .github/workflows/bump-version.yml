@@ -1,4 +1,4 @@
-name: Manage versions
+name: Bump and Tag Version
 
 on: [workflow_dispatch]
 
