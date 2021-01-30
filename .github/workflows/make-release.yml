@@ -1,0 +1,15 @@
+name: ci
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
