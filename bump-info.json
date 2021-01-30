@@ -1,0 +1,21 @@
+{
+  "scheme": "custom",
+  "schemeDefinition": "major.minor[.build][->patch]",
+  "versionFile": "./package.json",
+  "files": [{
+    "path": "Dockerfile",
+    "line": 3
+  }, {
+    "path": "coco-dev",
+    "line": 10
+  }, {
+    "path": "build",
+    "line": 4
+  }],
+  "rules": [{
+      "trigger": "commit",
+      "bump": "minor",
+      "branch": "master",
+      "reset": "build"
+  }]
+}
