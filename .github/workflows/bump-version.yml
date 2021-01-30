@@ -1,4 +1,4 @@
-name: Create New Release
+name: Bump and Tag Version
 
 on: [workflow_dispatch]
 
