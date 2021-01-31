@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Get the tag
-        run: >
+        run: |
           if [[ $GITHUB_REF == refs/tags* ]]
           then
             echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
