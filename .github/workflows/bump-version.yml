@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
    
     steps:
-      - name: Set up git for commits
-        run: git config user.name "GITHUBACTION"
-        timeout-minutes: 1
       # Checkout action is required
       - uses: actions/checkout@v2
         with:
           token: $${{ secrets.ADMIN_TOKEN }}
+      - name: Set up git for commits
+        run: git config user.name "GITHUBACTION"
+        timeout-minutes: 1
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
