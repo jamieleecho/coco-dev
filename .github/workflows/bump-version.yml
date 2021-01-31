@@ -7,11 +7,17 @@ on:
 
 jobs:
   bump:
+    if: "!contains(github.event.head_commit.author.name, 'GITHUBACTION')"
     runs-on: ubuntu-latest
    
     steps:
+      - name: Set up git for commits
+        run: git config user.name "GITHUBACTION"
+        timeout-minutes: 1
       # Checkout action is required
       - uses: actions/checkout@v2
+        with:
+          token: $${{ secrets.ADMIN_TOKEN }}
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
@@ -19,4 +25,4 @@ jobs:
         uses: michmich112/version-bumper@master
         with:
           options-file: './bump-info.json'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ADMIN_TOKEN }}
