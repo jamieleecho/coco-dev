@@ -23,11 +23,11 @@ jobs:
       -
         name: Get the tag
         run: >
-          if [[ $GITHUB_REF == refs/tags* ]] \
-          then \
-            echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV \
-          else \
-            echo "RELEASE_TAG=ignore" >> $GITHUB_ENV \
+          if [[ $GITHUB_REF == refs/tags* ]]
+          then
+            echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TAG=ignore" >> $GITHUB_ENV
           fi
       -
         name: Build and push image
