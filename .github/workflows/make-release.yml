@@ -1,7 +1,7 @@
 name: Make a New Release
 
 on:
-  create:
+  push:
     tags:
       - '*'
 
