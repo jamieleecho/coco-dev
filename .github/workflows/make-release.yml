@@ -1,4 +1,4 @@
-name: ci
+name: Make a New Release
 
 on:
   create:
