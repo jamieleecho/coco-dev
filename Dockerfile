@@ -67,9 +67,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.68.tar.gz cmoc-0.1.68.tar.gz
-RUN tar -zxpvf cmoc-0.1.68.tar.gz && \
-  (cd cmoc-0.1.68 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.69.tar.gz cmoc-0.1.69.tar.gz
+RUN tar -zxpvf cmoc-0.1.69.tar.gz && \
+  (cd cmoc-0.1.69 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
@@ -124,7 +124,7 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout f378f03a8132fcb74cb424d14230e7161c1af217 && \
+  git checkout b07629f0866cf2090907b72a6b171a0b2259f68d && \
   cd src && \
   g++-10 -std=c++20 *.cpp -o mcbasic && \
   cp mcbasic /usr/local/bin)
