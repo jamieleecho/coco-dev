@@ -58,7 +58,7 @@ RUN pip3 install \
 # Install CoCo Specific stuff
 RUN apt-get install -y \
   gcc6809=4.6.4-0~lw9a1~bionic3 \
-  lwtools=4.17-0~tormod~bionic
+  lwtools=4.18-0~tormod~bionic
 
 # Install Toolshed
 RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
