@@ -140,7 +140,7 @@ RUN ln -s /home /Users && \
     apt-get clean
 
 # For java_grinder
-ENV CLASSPATH /root/java_grinder/build/JavaGrinder.jar \
-    LC_ALL C.UTF-8 \
-    LANG C.UTF-8
+ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8
 
