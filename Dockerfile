@@ -58,7 +58,7 @@ RUN pip3 install \
 # Install CoCo Specific stuff
 RUN apt-get install -y \
   gcc6809=4.6.4-0~lw9a1~bionic3 \
-  lwtools=4.17-0~tormod~bionic
+  lwtools=4.18-0~tormod~bionic
 
 # Install Toolshed
 RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
@@ -124,10 +124,16 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout b07629f0866cf2090907b72a6b171a0b2259f68d && \
+  git checkout facc9eec02eed475bc25a2112d26bfb015151894 && \
   cd src && \
   g++-10 -std=c++20 *.cpp -o mcbasic && \
   cp mcbasic /usr/local/bin)
+
+# Install mc10-tools
+RUN git clone https://github.com/jamieleecho/mc10-tools.git && \
+  (cd mc10-tools && \
+  git checkout tags/0.2 && \
+  ./setup.py install)
 
 # Clean up
 RUN ln -s /home /Users && \
