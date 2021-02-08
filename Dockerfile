@@ -132,7 +132,7 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
 # Install mc10-tools
 RUN git clone https://github.com/jamieleecho/mc10-tools.git && \
   (cd mc10-tools && \
-  git checkout tags/0.2 && \
+  git checkout tags/0.3 && \
   ./setup.py install)
 
 # Clean up
@@ -140,4 +140,7 @@ RUN ln -s /home /Users && \
     apt-get clean
 
 # For java_grinder
-ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar
+ENV CLASSPATH /root/java_grinder/build/JavaGrinder.jar \
+    LC_ALL C.UTF-8 \
+    LANG C.UTF-8
+
