@@ -15,6 +15,7 @@ applications. It implements a Docker image that includes the following tools:
 * [tasm6801](https://github.com/gregdionne/tasm6801)
 * [mcbasic](https://github.com/gregdionne/mcbasic)
 * [mc10-tools 0.3](https://github.com/jamieleecho/mc10-tools)
+* [ZX0](https://github.com/einar-saukas/ZX0)
 * Python and Ruby as well as some useful Python packages
 
 
@@ -56,5 +57,3 @@ git clone https://github.com/jamieleecho/coco-dev.git
 cd coco-dev
 ./build
 ```
-
-
