@@ -53,7 +53,9 @@ RUN pip3 install \
   Pillow==6.2.0 \
   pypng==0.0.20 \
   setuptools==46.1.1 \
-  wand==0.5.7
+  wand==0.5.7 \
+  coco-tools==0.5 \
+  mc10-tools==0.5
 
 # Install CoCo Specific stuff
 RUN apt-get install -y \
@@ -67,20 +69,13 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.69.tar.gz cmoc-0.1.69.tar.gz
-RUN tar -zxpvf cmoc-0.1.69.tar.gz && \
-  (cd cmoc-0.1.69 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.70.tar.gz cmoc-0.1.70.tar.gz
+RUN tar -zxpvf cmoc-0.1.70.tar.gz && \
+  (cd cmoc-0.1.70 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
-
-# Install CoCo image conversion scripts
-RUN git config --global core.autocrlf input && \
-  git clone https://github.com/jamieleecho/coco-tools.git && \
-  (cd coco-tools && git checkout 0.3) && \
-  (cd coco-tools && python2 setup.py  install) && \
-  (cd coco-tools && python3 setup.py install)
 
 # Install milliluk-tools
 RUN git config --global core.autocrlf input && \
@@ -124,16 +119,10 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout facc9eec02eed475bc25a2112d26bfb015151894 && \
+  git checkout 5b0e2ab23a79ee7f6656dfd7c1318e760e4dff40 && \
   cd src && \
   g++-10 -std=c++20 *.cpp -o mcbasic && \
   cp mcbasic /usr/local/bin)
-
-# Install mc10-tools
-RUN git clone https://github.com/jamieleecho/mc10-tools.git && \
-  (cd mc10-tools && \
-  git checkout tags/0.3 && \
-  ./setup.py install)
 
 # Install ZX0 data compressor
 RUN git clone https://github.com/einar-saukas/ZX0 && \
