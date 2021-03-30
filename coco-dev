@@ -12,11 +12,11 @@ COCO_DEV_IMAGE=jamieleecho/coco-dev:0.34
 case "$(uname -s)" in
 
    Darwin)
-     docker run -it --rm -w `pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#` -v $HOME/..:/home -e HOME=/home/$USER ${COCO_DEV_IMAGE} ${params[@]}
+     docker run -it --rm -w "$(pwd | sed -e s#^/[Uu][Ss][Ee][Rr][Ss]#/home#)" -v "$HOME"/..:/home -e HOME=/home/"$USER" ${COCO_DEV_IMAGE} "${params[@]}"
      ;;
 
    Linux)
-     docker run -it --rm -w `pwd` -v $HOME/..:/home -e HOME=/home/$USER ${COCO_DEV_IMAGE} ${params[@]}
+     docker run -it --rm -w "$(pwd)" -v "$HOME"/..:/home -e HOME=/home/"$USER" ${COCO_DEV_IMAGE} "${params[@]}"
      ;;
 
    CYGWIN*|MINGW32*|MSYS*)

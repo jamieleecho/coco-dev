@@ -135,6 +135,16 @@ RUN git clone https://github.com/jamieleecho/mc10-tools.git && \
   git checkout tags/0.3 && \
   ./setup.py install)
 
+# Install ZX0 data compressor
+RUN git clone https://github.com/einar-saukas/ZX0 && \
+  cd "ZX0/src" && \
+  sed -i 's/^CC.*/CC = gcc/' Makefile && \
+  sed -i 's/^CFLAGS.*/CFLAGS = -O3/' Makefile && \
+  sed -i 's/^RM.*/RM = rm/' Makefile && \
+  sed -i 's/^EXTENSION.*/EXTENSION = /' Makefile && \
+  make && \
+  cp zx0 dzx0 /usr/local/bin
+
 # Clean up
 RUN ln -s /home /Users && \
     apt-get clean
