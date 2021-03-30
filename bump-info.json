@@ -13,7 +13,7 @@
     "line": 4
   }],
   "rules": [{
-      "trigger": "commit",
+      "trigger": "manual",
       "bump": "minor",
       "branch": "main",
       "reset": "build"

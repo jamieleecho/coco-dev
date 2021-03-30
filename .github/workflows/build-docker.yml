@@ -1,10 +1,10 @@
 name: Build Docker Image
 
 on:
-  - push
+  - [push, pull-request]
 
 jobs:
-  main:
+  build-and-push-image:
     runs-on: ubuntu-latest
     steps:
       -
