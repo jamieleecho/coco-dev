@@ -1,6 +1,6 @@
 name: Build Docker Image
 
-on: [push, pull-request]
+on: [push, pull_request]
 
 jobs:
   build-and-push-image:
