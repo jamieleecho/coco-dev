@@ -126,13 +126,9 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
 
 # Install ZX0 data compressor
 RUN git clone https://github.com/einar-saukas/ZX0 && \
-  cd "ZX0/src" && \
-  sed -i 's/^CC.*/CC = gcc/' Makefile && \
-  sed -i 's/^CFLAGS.*/CFLAGS = -O3/' Makefile && \
-  sed -i 's/^RM.*/RM = rm/' Makefile && \
-  sed -i 's/^EXTENSION.*/EXTENSION = /' Makefile && \
-  make && \
-  cp zx0 dzx0 /usr/local/bin
+  (cd "ZX0/src" && \
+  make CC=gcc CFLAGS=-O3 EXTENSION= && \
+  cp zx0 dzx0 /usr/local/bin)
 
 # Clean up
 RUN ln -s /home /Users && \
