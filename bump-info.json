@@ -16,6 +16,7 @@
       "trigger": "manual",
       "bump": "minor",
       "branch": "main",
-      "reset": "build"
+      "reset": "build",
+      "tag": true
   }]
 }
