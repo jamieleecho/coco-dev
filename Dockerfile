@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-MAINTAINER Jamie Cho version: 0.37
+MAINTAINER Jamie Cho version: 0.38
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
