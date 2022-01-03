@@ -69,9 +69,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.72.tar.gz cmoc-0.1.72.tar.gz
-RUN tar -zxpvf cmoc-0.1.72.tar.gz && \
-  (cd cmoc-0.1.72 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.73.tar.gz cmoc-0.1.73.tar.gz
+RUN tar -zxpvf cmoc-0.1.73.tar.gz && \
+  (cd cmoc-0.1.73 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
@@ -114,12 +114,12 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   (cd tasm6801 && \
-  git checkout edf31f10d5a9a2d093d83c3a501e65348f19a223 && \
+  git checkout edf31f10d5a9a2d093d83c3a501e65348f19a223  && \
   cd src && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout 5b0e2ab23a79ee7f6656dfd7c1318e760e4dff40 && \
+  git checkout 5b0e2ab23a79ee7f6656dfd7c1318e760e4dff40  && \
   cd src && \
   g++-10 -std=c++20 *.cpp -o mcbasic && \
   cp mcbasic /usr/local/bin)
