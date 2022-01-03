@@ -32,7 +32,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: ${{ startsWith(github.ref, 'refs/tags') }}
-          tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}
+          tags:
+            - jamieleecho/coco-dev:${{ env.RELEASE_TAG }}
+            - jamieleecho/coco-dev:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
