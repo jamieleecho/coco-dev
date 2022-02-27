@@ -6,7 +6,8 @@ MAINTAINER Jamie Cho version: 0.40
 WORKDIR /root
 
 # Setup sources
-RUN apt-get update && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
   apt-get install -y software-properties-common && \
   add-apt-repository ppa:deadsnakes/ppa && \
   add-apt-repository ppa:ubuntu-toolchain-r/test && \
@@ -33,14 +34,15 @@ RUN apt-get update && \
     python \
     python-dev \
     python-pip \
-    python3.6 \
-    python3.6-dev \
+    python3.10 \
+    python3.10-dev \
+    python3.10-distutils \
     ruby \
     software-properties-common \
     vim
 
 # Install useful Python tools
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 && \
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
   curl https://bootstrap.pypa.io/get-pip.py | python3
 RUN pip2 install \
   numpy==1.16.5 \
@@ -49,12 +51,13 @@ RUN pip2 install \
   setuptools==41.6.0 \
   wand==0.5.7
 RUN pip3 install \
-  numpy==1.16.5 \
+  numpy==1.22.2 \
   Pillow==6.2.0 \
   pypng==0.0.20 \
-  setuptools==46.1.1 \
+  setuptools==60.9.3 \
   wand==0.5.7 \
   coco-tools==0.5 \
+  milliluk-tools==0.1 \
   mc10-tools==0.5
 
 # Install CoCo Specific stuff
@@ -69,20 +72,13 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.73.tar.gz cmoc-0.1.73.tar.gz
-RUN tar -zxpvf cmoc-0.1.73.tar.gz && \
-  (cd cmoc-0.1.73 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.75.tar.gz cmoc-0.1.75.tar.gz
+RUN tar -zxpvf cmoc-0.1.75.tar.gz && \
+  (cd cmoc-0.1.75 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
-
-# Install milliluk-tools
-RUN git config --global core.autocrlf input && \
-  git clone https://github.com/milliluk/milliluk-tools.git && \
-  (cd milliluk-tools && git checkout 454e7247c892f7153136b9e5e6b12aeeecc9dd36 && \
-  dos2unix < cgp220/cgp220.py > /usr/local/bin/cgp220.py && \
-  chmod a+x /usr/local/bin/cgp220.py)
 
 # Install tlindner/cmoc_os9
 RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
@@ -114,15 +110,15 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   (cd tasm6801 && \
-  git checkout edf31f10d5a9a2d093d83c3a501e65348f19a223  && \
+  git checkout fade8bbf60c482d7068a158c8d64de24f7e4944d && \
   cd src && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout 5b0e2ab23a79ee7f6656dfd7c1318e760e4dff40  && \
+  git checkout 1c082c893c0421302e464aec93965fcbc5c3c141 && \
   cd src && \
-  g++-10 -std=c++20 *.cpp -o mcbasic && \
-  cp mcbasic /usr/local/bin)
+  g++ -std=c++14 -I. */*.cpp -o ../mcbasic && \
+  cp ../mcbasic /usr/local/bin)
 
 # Install ZX0 data compressor
 RUN git clone https://github.com/einar-saukas/ZX0 && \
