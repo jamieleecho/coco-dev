@@ -72,13 +72,13 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.75.tar.gz cmoc-0.1.75.tar.gz
-RUN tar -zxpvf cmoc-0.1.75.tar.gz && \
-  (cd cmoc-0.1.75 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.77.tar.gz cmoc-0.1.77.tar.gz
+RUN tar -zxpvf cmoc-0.1.77.tar.gz && \
+  (cd cmoc-0.1.77 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
-  update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
+  update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2
 
 # Install tlindner/cmoc_os9
 RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
@@ -115,7 +115,7 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout 1c082c893c0421302e464aec93965fcbc5c3c141 && \
+  git checkout 38a63b39c72c6b213c2982ff2c8eaa966d680f7d && \
   cd src && \
   g++ -std=c++14 -I. */*.cpp -o ../mcbasic && \
   cp ../mcbasic /usr/local/bin)
