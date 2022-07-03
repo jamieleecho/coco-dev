@@ -63,7 +63,7 @@ RUN pip3 install \
 # Install CoCo Specific stuff
 RUN apt-get install -y \
   gcc6809=4.6.4-0~lw9a1~bionic3 \
-  lwtools=4.18-0~tormod~bionic
+  lwtools=4.19-0~tormod~bionic
 
 # Install Toolshed
 RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
@@ -79,6 +79,13 @@ RUN tar -zxpvf cmoc-0.1.77.tar.gz && \
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2
+
+# Install key OS-9 defs from nitros-9
+RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
+  (cd nitros9-code && \
+  hg checkout 6b7a7b233925 && \
+  mkdir -p /usr/local/share/lwasm && \
+  cp -R defs/* /usr/local/share/lwasm/)
 
 # Install tlindner/cmoc_os9
 RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \

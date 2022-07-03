@@ -2,12 +2,13 @@
 This repo implements a simplified environment for developing [Tandy
 Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
-* [LWTOOLS 4.18](http://lwtools.projects.l-w.ca)
+* [LWTOOLS 4.19](http://lwtools.projects.l-w.ca)
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
 * [CMOC 0.1.77](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
 * [gcc6809](https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809)
 * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
 * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
+* [nitros9/defs](https://sourceforge.net/p/nitros9/code/ci/default/tree/defs/)
 * [tlindner/cmoc\_os9](https://github.com/tlindner/cmoc_os9)
 * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
 * [naken](http://www.mikekohn.net/micro/naken_asm.php)
