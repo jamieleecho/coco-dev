@@ -62,8 +62,14 @@ RUN pip3 install \
 
 # Install CoCo Specific stuff
 RUN apt-get install -y \
-  gcc6809=4.6.4-0~lw9a1~bionic3 \
-  lwtools=4.19-0~tormod~bionic
+  gcc6809=4.6.4-0~lw9a1~bionic3
+
+# Install lwtools
+RUN hg clone http://www.lwtools.ca/hg && \
+  (cd hg && \
+   hg checkout 33a59e232a5b && \
+   make && \
+   make install)
 
 # Install Toolshed
 RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
