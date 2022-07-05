@@ -139,6 +139,13 @@ RUN git clone https://github.com/einar-saukas/ZX0 && \
   make CC=gcc CFLAGS=-O3 EXTENSION= && \
   cp zx0 dzx0 /usr/local/bin)
 
+# Install salvador (fast near-optimal ZX0 compressor)
+RUN git clone https://github.com/emmanuel-marty/salvador && \
+  apt-get install -y clang && \
+  (cd salvador && \
+  make && \
+  cp salvador /usr/local/bin)
+
 # Clean up
 RUN ln -s /home /Users && \
     apt-get clean
