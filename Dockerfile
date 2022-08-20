@@ -78,9 +78,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.77.tar.gz cmoc-0.1.77.tar.gz
-RUN tar -zxpvf cmoc-0.1.77.tar.gz && \
-  (cd cmoc-0.1.77 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.78.tar.gz cmoc-0.1.78.tar.gz
+RUN tar -zxpvf cmoc-0.1.78.tar.gz && \
+  (cd cmoc-0.1.78 && ./configure && make && make install)
 
 # Make python3 the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
