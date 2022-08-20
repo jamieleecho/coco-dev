@@ -17,6 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get install -y \
     bison \
     build-essential \
+    clang \
     curl \
     default-jdk \
     dos2unix \
@@ -141,7 +142,6 @@ RUN git clone https://github.com/einar-saukas/ZX0 && \
 
 # Install salvador (fast near-optimal ZX0 compressor)
 RUN git clone https://github.com/emmanuel-marty/salvador && \
-  apt-get install -y clang && \
   (cd salvador && \
   make && \
   cp salvador /usr/local/bin)
