@@ -17,6 +17,7 @@ applications. It implements a Docker image that includes the following tools:
 * [mcbasic](https://github.com/gregdionne/mcbasic)
 * [mc10-tools 0.5](https://github.com/jamieleecho/mc10-tools)
 * [ZX0](https://github.com/einar-saukas/ZX0)
+* [salvador](https://github.com/emmanuel-marty/salvador)
 * Python and Ruby as well as some useful Python packages
 
 
