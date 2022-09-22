@@ -17,7 +17,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get install -y \
     bison \
     build-essential \
-    clang \
     curl \
     default-jdk \
     dos2unix \
@@ -28,38 +27,32 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git \
     imagemagick \
     libfuse-dev \
+    libjpeg-dev \
     libmagickwand-dev \
     mame-tools \
     markdown \
-    mercurial \
-    python \
-    python-dev \
-    python-pip \
     python3.10 \
     python3.10-dev \
     python3.10-distutils \
-    ruby \
+    python3.10-tk \
     software-properties-common \
-    vim
+    vim \
+    zlib1g-dev && \
+  apt-get purge -y python3.6
 
-# Install useful Python tools
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
-  curl https://bootstrap.pypa.io/get-pip.py | python3
-RUN pip2 install \
-  numpy==1.16.5 \
-  Pillow==6.2.0 \
-  pypng==0.0.20 \
-  setuptools==41.6.0 \
-  wand==0.5.7
-RUN pip3 install \
-  numpy==1.22.2 \
-  Pillow==6.2.0 \
-  pypng==0.0.20 \
-  setuptools==60.9.3 \
-  wand==0.5.7 \
-  coco-tools==0.5 \
-  milliluk-tools==0.1 \
-  mc10-tools==0.5
+  update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
+  curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+  pip install \
+    mercurial==6.2.2 \
+    numpy==1.22.2 \
+    Pillow==7.0.0 \
+    pypng==0.0.20 \
+    setuptools==60.9.3 \
+    wand==0.5.7 \
+    coco-tools==0.6 \
+    milliluk-tools==0.1 \
+    mc10-tools==0.5
 
 # Install CoCo Specific stuff
 RUN apt-get install -y \
@@ -79,13 +72,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.78.tar.gz cmoc-0.1.78.tar.gz
-RUN tar -zxpvf cmoc-0.1.78.tar.gz && \
-  (cd cmoc-0.1.78 && ./configure && make && make install)
-
-# Make python3 the default
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1 && \
-  update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.80.tar.gz cmoc-0.1.80.tar.gz
+RUN tar -zxpvf cmoc-0.1.80.tar.gz && \
+  (cd cmoc-0.1.80 && ./configure && make && make install)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
@@ -124,12 +113,12 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   (cd tasm6801 && \
-  git checkout fade8bbf60c482d7068a158c8d64de24f7e4944d && \
+  git checkout 03aa546559a86f5ee66569c7c35c998023b1bfc7 && \
   cd src && \
   g++ *.cpp -o tasm6801 && \
   cp tasm6801 /usr/local/bin) && \
   (cd mcbasic && \
-  git checkout 38a63b39c72c6b213c2982ff2c8eaa966d680f7d && \
+  git checkout 35e2a09e3abb22f97c60ac8b2a16f435265cac8a && \
   cd src && \
   g++ -std=c++14 -I. */*.cpp -o ../mcbasic && \
   cp ../mcbasic /usr/local/bin)
@@ -143,7 +132,11 @@ RUN git clone https://github.com/einar-saukas/ZX0 && \
 # Install salvador (fast near-optimal ZX0 compressor)
 RUN git clone https://github.com/emmanuel-marty/salvador && \
   (cd salvador && \
-  make && \
+  git checkout a1b10b03f690ab1fa2f3313d47c9111479114182 && \
+  mkdir clang-hack && \
+  ln -s /usr/bin/cc clang-hack/clang && \
+  (PATH=./clang-hack:$PATH make) && \
+  rm -r ./clang-hack && \
   cp salvador /usr/local/bin)
 
 # Clean up
@@ -154,4 +147,3 @@ RUN ln -s /home /Users && \
 ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
-
