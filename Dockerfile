@@ -61,7 +61,7 @@ RUN apt-get install -y \
 # Install lwtools
 RUN hg clone http://www.lwtools.ca/hg && \
   (cd hg && \
-   hg checkout 33a59e232a5b && \
+   hg checkout e10618b48e68 && \
    make && \
    make install)
 

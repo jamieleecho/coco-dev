@@ -2,9 +2,9 @@
 This repo implements a simplified environment for developing [Tandy
 Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
-* [LWTOOLS 4.19+](http://lwtools.projects.l-w.ca)
+* [LWTOOLS 4.20+](http://lwtools.projects.l-w.ca)
 * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
-* [CMOC 0.1.78](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+* [CMOC 0.1.80](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
 * [gcc6809](https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809)
 * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
 * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
@@ -18,7 +18,7 @@ applications. It implements a Docker image that includes the following tools:
 * [mc10-tools 0.5](https://github.com/jamieleecho/mc10-tools)
 * [ZX0](https://github.com/einar-saukas/ZX0)
 * [salvador](https://github.com/emmanuel-marty/salvador)
-* Python and Ruby as well as some useful Python packages
+* Python and some useful Python packages
 
 
 ## Motivation
