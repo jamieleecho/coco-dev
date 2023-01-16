@@ -2,22 +2,29 @@
 This repo implements a simplified environment for developing [Tandy
 Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
-* [LWTOOLS 4.20+](http://lwtools.projects.l-w.ca)
-* [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
-* [CMOC 0.1.80](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
-* [gcc6809](https://launchpad.net/~tormodvolden/+archive/ubuntu/m6809)
-* [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
-* [milliluk-tools](https://github.com/milliluk/milliluk-tools)
-* [nitros9/defs](https://sourceforge.net/p/nitros9/code/ci/default/tree/defs/)
-* [tlindner/cmoc\_os9](https://github.com/tlindner/cmoc_os9)
-* [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
-* [naken](http://www.mikekohn.net/micro/naken_asm.php)
-* [coco-tools 0.5](https://github.com/jamieleecho/coco-tools)
-* [tasm6801](https://github.com/gregdionne/tasm6801)
-* [mcbasic](https://github.com/gregdionne/mcbasic)
-* [mc10-tools 0.5](https://github.com/jamieleecho/mc10-tools)
-* [ZX0](https://github.com/einar-saukas/ZX0)
-* [salvador](https://github.com/emmanuel-marty/salvador)
+* CoCo Languages and Libraries
+  * [CMOC 0.1.80](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+  * [KAOS.Assembler](https://github.com/ChetSimpson/KAOS.Assembler)
+  * [KAOSToolkit-Prototype 1.0.0](https://github.com/ChetSimpson/KAOSToolkit-Prototype)
+  * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
+  * [LWTOOLS 4.20+](http://lwtools.projects.l-w.ca)
+  * [naken](http://www.mikekohn.net/micro/naken_asm.php)
+  * [nitros9/defs](https://sourceforge.net/p/nitros9/code/ci/default/tree/defs/)
+  * [tlindner/cmoc\_os9](https://github.com/tlindner/cmoc_os9)
+
+* CoCo Development Utilities
+  * [coco-tools 0.5](https://github.com/jamieleecho/coco-tools)
+  * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
+  * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
+  * [salvador](https://github.com/emmanuel-marty/salvador)
+  * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
+  * [ZX0](https://github.com/einar-saukas/ZX0)
+
+* MC-10
+  * [mc10-tools 0.5](https://github.com/jamieleecho/mc10-tools)
+  * [mcbasic](https://github.com/gregdionne/mcbasic)
+  * [tasm6801](https://github.com/gregdionne/tasm6801)
+
 * Python and some useful Python packages
 
 
@@ -31,7 +38,7 @@ development environment becomes possible.
 ## Requirements
 * [macOS](https://www.apple.com/macos/high-sierra/) or
   [Linux](https://www.debian.org)
-* [Docker 17](https://www.docker.com)
+* [Docker 20](https://www.docker.com)
 
 On Mac systems you must share `/Users` with Docker. To do this:
 * From the Docker menu select `Preferences...`
