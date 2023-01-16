@@ -59,6 +59,19 @@ your target folder and use typical development commands such as `lwasm`,
 `lwlink`, `decb`, `os9` and `cmoc`
 
 
+### Using KAOS on coco-dev
+This version of coco-dev includes support for KAOSToolkit-Prototype as
+KAOS.Assembler. There are 4 command line tools that can be invoked using UNIX
+calling conventions, particularly using lower case letters instead of
+uppercase letters. Some examples:
+```
+./coco-dev kasm sprite1.asm
+./coco-dev kaospp -opalette.asm -ppalette.gpl -ftc1014
+./coco-dev kaostc --texture=sprite1.png --palette=palette.gpl --label-prefix=MySprite_ --pitch=128 --bpp=4 --cursor-register=Y --restore-cursor --output-file=sprite1.asm
+./coco-dev kaostp --output-file texture.raw -t texture.png -p palette.gpl
+```
+
+
 ## Building coco-dev
 ```
 # Start the Docker application if it is not already running
