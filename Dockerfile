@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 MAINTAINER Jamie Cho version: 0.47
 
@@ -7,19 +7,23 @@ WORKDIR /root
 
 # Setup sources
 RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get install -y software-properties-common && \
-  add-apt-repository ppa:deadsnakes/ppa && \
-  add-apt-repository ppa:ubuntu-toolchain-r/test && \
-  add-apt-repository ppa:tormodvolden/m6809 && \
+  apt-get update -y && \
+  apt-get install -y curl && \
+  curl https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
+  dpkg -i packages-microsoft-prod.deb && \
+  rm packages-microsoft-prod.deb && \
+  curl http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1\~18.04.20_amd64.deb -o 18.04.20_amd64.deb && \
+  dpkg -i 18.04.20_amd64.deb && \
+  rm 18.04.20_amd64.deb && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
+    aspnetcore-runtime-3.1 \
     bison \
     build-essential \
-    curl \
     default-jdk \
     dos2unix \
+    dotnet-sdk-7.0 \
     ffmpeg \
     flex \
     fuse \
@@ -31,18 +35,18 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     libmagickwand-dev \
     mame-tools \
     markdown \
-    python3.10 \
-    python3.10-dev \
-    python3.10-distutils \
-    python3.10-tk \
+    p7zip \
+    python3 \
+    python3-dev \
+    python3-distutils \
+    python3-tk \
     software-properties-common \
     vim \
-    zlib1g-dev && \
-  apt-get purge -y python3.6
+    zlib1g-dev
 
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
-  curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+  curl https://bootstrap.pypa.io/get-pip.py | python && \
   pip install \
     mercurial==6.2.2 \
     numpy==1.22.2 \
@@ -53,10 +57,6 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     coco-tools==0.6 \
     milliluk-tools==0.1 \
     mc10-tools==0.5
-
-# Install CoCo Specific stuff
-RUN apt-get install -y \
-  gcc6809=4.6.4-0~lw9a1~bionic3
 
 # Install lwtools
 RUN hg clone http://www.lwtools.ca/hg && \
@@ -138,6 +138,18 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
   (PATH=./clang-hack:$PATH make) && \
   rm -r ./clang-hack && \
   cp salvador /usr/local/bin)
+
+# Install KAOS.Assembler
+RUN git clone https://github.com/ChetSimpson/KAOS.Assembler.git && \
+  (cd KAOS.Assembler && \
+  git checkout 4f61e3f859b76990dd78b56a99fe472e56b5684a && \
+  gcc src/*.c -o /usr/local/bin/kasm)
+
+# Install KAOS
+RUN curl -L https://github.com/ChetSimpson/KAOSToolkit-Prototype/releases/download/1.0.0/KAOSTKPT.7z -o KAOSTKPT.7z && \
+  7zr x KAOSTKPT.7z && \
+  cp KAOSTKPT/*.dll KAOSTKPT/*.json /usr/local/bin
+COPY kaos/* /usr/local/bin/
 
 # Clean up
 RUN ln -s /home /Users && \
