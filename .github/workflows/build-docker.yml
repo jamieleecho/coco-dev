@@ -31,12 +31,16 @@ jobs:
         name: Build and push image
         uses: docker/build-push-action@v3
         with:
-          context: .
           push: ${{ startsWith(github.ref, 'refs/tags') }}
           tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}, jamieleecho/coco-dev:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - 
+        uses: actions/checkout@v3
+        if: startsWith(github.ref, 'refs/tags')
+
       -
         name: Update repo description
         uses: peter-evans/dockerhub-description@v3
