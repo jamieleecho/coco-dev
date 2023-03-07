@@ -72,9 +72,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.80.tar.gz cmoc-0.1.80.tar.gz
-RUN tar -zxpvf cmoc-0.1.80.tar.gz && \
-  (cd cmoc-0.1.80 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.81.tar.gz cmoc-0.1.81.tar.gz
+RUN tar -zxpvf cmoc-0.1.81.tar.gz && \
+  (cd cmoc-0.1.81 && ./configure && make && make install)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
