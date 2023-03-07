@@ -12,9 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   curl https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
   dpkg -i packages-microsoft-prod.deb && \
   rm packages-microsoft-prod.deb && \
-  curl http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1\~18.04.20_amd64.deb -o 18.04.20_amd64.deb && \
-  dpkg -i 18.04.20_amd64.deb && \
-  rm 18.04.20_amd64.deb && \
+  echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
