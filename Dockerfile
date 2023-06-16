@@ -16,7 +16,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
-    aspnetcore-runtime-3.1 \
     bison \
     build-essential \
     default-jdk \
@@ -59,7 +58,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 # Install lwtools
 RUN hg clone http://www.lwtools.ca/hg && \
   (cd hg && \
-   hg checkout e10618b48e68 && \
+   hg checkout lwtools-4.21 && \
    make && \
    make install)
 
@@ -70,9 +69,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.81.tar.gz cmoc-0.1.81.tar.gz
-RUN tar -zxpvf cmoc-0.1.81.tar.gz && \
-  (cd cmoc-0.1.81 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.82.tar.gz cmoc-0.1.82.tar.gz
+RUN tar -zxpvf cmoc-0.1.82.tar.gz && \
+  (cd cmoc-0.1.82 && ./configure && make && make install)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
