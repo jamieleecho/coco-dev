@@ -56,22 +56,20 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     mc10-tools==0.5
 
 # Install lwtools
-RUN hg clone http://www.lwtools.ca/hg && \
-  (cd hg && \
-   hg checkout lwtools-4.21 && \
-   make && \
-   make install)
+ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.22.tar.gz lwtools-4.22.tar.gz
+RUN tar -zxpvf lwtools-4.22.tar.gz && \
+  (cd lwtools-4.22 && make -j install CC=gcc && make clean)
 
 # Install Toolshed
 RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
   (cd toolshed-code && \
    hg up v2_2 && \
-   make -C build/unix install CC=gcc)
+   make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.82.tar.gz cmoc-0.1.82.tar.gz
-RUN tar -zxpvf cmoc-0.1.82.tar.gz && \
-  (cd cmoc-0.1.82 && ./configure && make && make install)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.85.tar.gz cmoc-0.1.85.tar.gz
+RUN tar -zxpvf cmoc-0.1.85.tar.gz && \
+  (cd cmoc-0.1.85 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
@@ -86,7 +84,7 @@ RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
   git checkout fix-cmoc-error && \
   make && \
   cd ../cgfx && \
-  make && \
+  make -j && \
   cd .. && \
   mkdir -p /usr/local/share/cmoc/lib/os9 && \
   mkdir -p /usr/local/share/cmoc/include/os9/cgfx && \
@@ -99,31 +97,32 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
   (cd naken_asm && \
   git checkout aa692552769c831cf4f937915bb96f618fc04e7e && \
-  ./configure && make && make install && \
+  ./configure && make -j && make install && \
   cd ../java_grinder && \
   git checkout 3aac128792d3293270e19b28d9da6c0b99423fab && \
-  make && make java && \
-  (cd samples/trs80_coco && make grind) && \
+  make -j && make java && \
+  (cd samples/trs80_coco && make -j grind) && \
   cp java_grinder /usr/local/bin/)
 
 # Install tasm and mcbasic
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   (cd tasm6801 && \
-  git checkout 03aa546559a86f5ee66569c7c35c998023b1bfc7 && \
+  git checkout 8370ade && \
   cd src && \
-  g++ *.cpp -o tasm6801 && \
-  cp tasm6801 /usr/local/bin) && \
+  make -j && \
+  cp ../tasm6801 /usr/local/bin && \
+  make -j) && \
   (cd mcbasic && \
-  git checkout 35e2a09e3abb22f97c60ac8b2a16f435265cac8a && \
-  cd src && \
-  g++ -std=c++14 -I. */*.cpp -o ../mcbasic && \
-  cp ../mcbasic /usr/local/bin)
+  git checkout f6258ad && \
+  make -j && \
+  cp mcbasic /usr/local/bin && \
+  make clean)
 
 # Install ZX0 data compressor
 RUN git clone https://github.com/einar-saukas/ZX0 && \
   (cd "ZX0/src" && \
-  make CC=gcc CFLAGS=-O3 EXTENSION= && \
+  make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
   cp zx0 dzx0 /usr/local/bin)
 
 # Install salvador (fast near-optimal ZX0 compressor)
@@ -132,9 +131,10 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
   git checkout a1b10b03f690ab1fa2f3313d47c9111479114182 && \
   mkdir clang-hack && \
   ln -s /usr/bin/cc clang-hack/clang && \
-  (PATH=./clang-hack:$PATH make) && \
+  (PATH=./clang-hack:$PATH make -j) && \
   rm -r ./clang-hack && \
-  cp salvador /usr/local/bin)
+  cp salvador /usr/local/bin && \
+  make clean)
 
 # Install KAOS.Assembler
 RUN git clone https://github.com/ChetSimpson/KAOS.Assembler.git && \
