@@ -29,7 +29,7 @@ jobs:
           fi
       -
         name: Build and push image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           push: ${{ startsWith(github.ref, 'refs/tags') }}
           platforms: linux/amd64,linux/arm64
@@ -39,7 +39,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - 
-        uses: actions/checkout@v5
+        uses: actions/checkout@v3
         if: startsWith(github.ref, 'refs/tags')
 
       -
