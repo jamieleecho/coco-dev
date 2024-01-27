@@ -5,7 +5,6 @@ applications. It implements a Docker image that includes the following tools:
 * CoCo Languages and Libraries
   * [CMOC 0.1.85](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
   * [KAOS.Assembler](https://github.com/ChetSimpson/KAOS.Assembler)
-  * [KAOSToolkit-Prototype 1.0.0](https://github.com/ChetSimpson/KAOSToolkit-Prototype)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.22](http://lwtools.projects.l-w.ca)
   * [naken](http://www.mikekohn.net/micro/naken_asm.php)

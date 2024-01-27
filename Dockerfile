@@ -9,10 +9,6 @@ WORKDIR /root
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
   apt-get install -y curl && \
-  curl https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
-  dpkg -i packages-microsoft-prod.deb && \
-  rm packages-microsoft-prod.deb && \
-  echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
@@ -20,7 +16,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     build-essential \
     default-jdk \
     dos2unix \
-    dotnet-sdk-7.0 \
     ffmpeg \
     flex \
     fuse \
@@ -135,18 +130,6 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
   rm -r ./clang-hack && \
   cp salvador /usr/local/bin && \
   make clean)
-
-# Install KAOS.Assembler
-RUN git clone https://github.com/ChetSimpson/KAOS.Assembler.git && \
-  (cd KAOS.Assembler && \
-  git checkout 4f61e3f859b76990dd78b56a99fe472e56b5684a && \
-  gcc src/*.c -o /usr/local/bin/kasm)
-
-# Install KAOS
-RUN curl -L https://github.com/ChetSimpson/KAOSToolkit-Prototype/releases/download/1.0.0/KAOSTKPT.7z -o KAOSTKPT.7z && \
-  7zr x KAOSTKPT.7z && \
-  cp KAOSTKPT/*.dll KAOSTKPT/*.json /usr/local/bin
-COPY kaos/* /usr/local/bin/
 
 # Clean up
 RUN ln -s /home /Users && \
