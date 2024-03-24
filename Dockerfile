@@ -62,9 +62,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.85.tar.gz cmoc-0.1.85.tar.gz
-RUN tar -zxpvf cmoc-0.1.85.tar.gz && \
-  (cd cmoc-0.1.85 && ./configure && make && make install && make clean)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.86.tar.gz cmoc-0.1.86.tar.gz
+RUN tar -zxpvf cmoc-0.1.86.tar.gz && \
+  (cd cmoc-0.1.86 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
@@ -72,20 +72,6 @@ RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
   hg checkout 6b7a7b233925 && \
   mkdir -p /usr/local/share/lwasm && \
   cp -R defs/* /usr/local/share/lwasm/)
-
-# Install tlindner/cmoc_os9
-RUN git clone https://github.com/jamieleecho/cmoc_os9.git && \
-  (cd cmoc_os9/lib && \
-  git checkout fix-cmoc-error && \
-  make && \
-  cd ../cgfx && \
-  make -j && \
-  cd .. && \
-  mkdir -p /usr/local/share/cmoc/lib/os9 && \
-  mkdir -p /usr/local/share/cmoc/include/os9/cgfx && \
-  cp lib/libc.a cgfx/libcgfx.a /usr/local/share/cmoc/lib/os9 && \
-  cp -R include/* /usr/local/share/cmoc/include/os9 && \
-  cp -R cgfx/include/* /usr/local/share/cmoc/include/os9)
 
 # Install java grinder
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
@@ -109,7 +95,7 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   cp ../tasm6801 /usr/local/bin && \
   make -j) && \
   (cd mcbasic && \
-  git checkout f6258ad && \
+  git checkout f8df0e0 && \
   make -j && \
   cp mcbasic /usr/local/bin && \
   make clean)
