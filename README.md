@@ -3,12 +3,11 @@ This repo implements a simplified environment for developing [Tandy
 Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 * CoCo Languages and Libraries
-  * [CMOC 0.1.85](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
+  * [CMOC 0.1.86](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.22](http://lwtools.projects.l-w.ca)
   * [naken](http://www.mikekohn.net/micro/naken_asm.php)
   * [nitros9/defs](https://sourceforge.net/p/nitros9/code/ci/default/tree/defs/)
-  * [tlindner/cmoc\_os9](https://github.com/tlindner/cmoc_os9)
 
 * CoCo Development Utilities
   * [coco-tools 0.5](https://github.com/jamieleecho/coco-tools)
