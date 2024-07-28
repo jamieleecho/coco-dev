@@ -102,7 +102,7 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   cp ../tasm6801 /usr/local/bin && \
   make -j) && \
   (cd mcbasic && \
-  git checkout f6258ad && \
+  git checkout f8df0e0 && \
   make -j && \
   cp mcbasic /usr/local/bin && \
   make clean)
