@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-MAINTAINER Jamie Cho version: 0.53
+LABEL org.opencontainers.image.authors="Jamie Cho"
 
 # Store stuff in a semi-reasonable spot
 WORKDIR /root
@@ -18,23 +18,30 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     dos2unix \
     ffmpeg \
     flex \
+    freeglut3-dev \
     fuse \
     g++-10 \
     git \
     imagemagick \
+    libcurl4-openssl-dev \
     libfuse-dev \
     libjpeg-dev \
     libmagickwand-dev \
+    libglu1-mesa-dev \
     mame-tools \
     markdown \
+    mesa-common-dev \
     p7zip \
     python3 \
     python3-dev \
     python3-distutils \
     python3-tk \
     software-properties-common \
+    unzip \
     vim \
-    zlib1g-dev
+    xvfb \
+    zlib1g-dev && \
+  apt-get clean
 
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
@@ -46,7 +53,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     pypng==0.0.20 \
     setuptools==60.9.3 \
     wand==0.5.7 \
-    coco-tools==0.6 \
+    coco-tools==0.8 \
     milliluk-tools==0.1 \
     mc10-tools==0.5
 
@@ -62,9 +69,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.86.tar.gz cmoc-0.1.86.tar.gz
-RUN tar -zxpvf cmoc-0.1.86.tar.gz && \
-  (cd cmoc-0.1.86 && ./configure && make && make install && make clean)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.88.tar.gz cmoc-0.1.88.tar.gz
+RUN tar -zxpvf cmoc-0.1.88.tar.gz && \
+  (cd cmoc-0.1.88 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
@@ -117,9 +124,36 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
   cp salvador /usr/local/bin && \
   make clean)
 
+# Create a user for installs
+RUN adduser mrinstaller
+USER mrinstaller
+WORKDIR /home/mrinstaller
+
+# Install qb64
+RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
+    cd QB64pe && \
+    git checkout 56990e1a605cb639acc1ecf30619ec6f4fbcd3fa && \
+    ./setup_lnx.sh
+
+# Move qb64 to /root and Install BASIC-To-6809
+USER root
+WORKDIR /root
+RUN mv /home/mrinstaller/QB64pe /root && \
+    chown -R root:root /root/QB64pe && \
+    (Xvfb :1 -screen 0 800x600x24+32 &) && \
+    git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
+    export DISPLAY=:1 && \
+    cd BASIC-To-6809 && \
+    git checkout 5cbdd5916db32d3f1a65c7c4539b677ad7e13045 && \
+    unzip BasTo6809_V1.16.zip && \
+    cd BasTo6809_V1.16 && \
+    ln -s PRINT.ASM Basic_Includes/PRINT.asm && \
+    sleep 1 && \
+    ../../QB64pe/qb64pe BasTo6809.bas -c -o basto6809
+ADD utils/basto6809todsk /usr/local/bin
+
 # Clean up
-RUN ln -s /home /Users && \
-    apt-get clean
+RUN ln -s /home /Users
 
 # For java_grinder
 ENV CLASSPATH=/root/java_grinder/build/JavaGrinder.jar \
