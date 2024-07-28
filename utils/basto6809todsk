@@ -7,9 +7,10 @@ if [[ $# -ne 1 ]] ; then
 fi
 
 BAS_FILE="$1"
-ASM_FILE="${BAS_FILE%.BAS}.asm"
-BIN_FILE="${BAS_FILE%.BAS}.BIN"
-DSK_FILE="${BAS_FILE%.BAS}.DSK"
+BAS_FILE0=$(basename ${BAS_FILE})
+ASM_FILE="${BAS_FILE0%.BAS}.asm"
+BIN_FILE="${BAS_FILE0%.BAS}.BIN"
+DSK_FILE="${BAS_FILE0%.BAS}.DSK"
 CURRENT_DIR="`pwd`"
 
 # Create a working folder
@@ -21,7 +22,7 @@ cd ${tmpdir}
 
 # Do real work
 echo Compiling ${BAS_FILE} and creating ${ASM_FILE}, ${BIN_FILE} and ${DSK_FILE}
-./basto6809 "${BAS_FILE}"
+./basto6809 "${BAS_FILE0}"
 lwasm  -o "${BIN_FILE}" "$ASM_FILE"
 decb dskini "${DSK_FILE}"
 decb copy "${BIN_FILE}" "${DSK_FILE},${BIN_FILE}"
@@ -32,4 +33,4 @@ cp "${DSK_FILE}" "${CURRENT_DIR}"
 
 # Clean up
 cd "${CURRENT_DIR}"
-echo To clean up, enter: \"rm -r "${tmpdir}"\"
+# Normally, we would clean up with rm -r "${tmpdir}"
