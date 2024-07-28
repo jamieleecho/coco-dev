@@ -1,0 +1,35 @@
+#!/bin/env bash
+
+if [[ $# -ne 1 ]] ; then
+    echo $0 PROG.BAS
+    echo Compiles PROG.BAS into a binary located on PROG.DSK
+    exit 0
+fi
+
+BAS_FILE="$1"
+ASM_FILE="${BAS_FILE%.BAS}.asm"
+BIN_FILE="${BAS_FILE%.BAS}.BIN"
+DSK_FILE="${BAS_FILE%.BAS}.DSK"
+CURRENT_DIR="`pwd`"
+
+# Create a working folder
+tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'tmpdir')
+echo Copying compiler and source file to ${tmpdir}
+cp -R /root/BASIC-To-6809/BasTo6809_V1.16/* ${tmpdir}
+cp $1 ${tmpdir}
+cd ${tmpdir}
+
+# Do real work
+echo Compiling ${BAS_FILE} and creating ${ASM_FILE}, ${BIN_FILE} and ${DSK_FILE}
+./basto6809 "${BAS_FILE}"
+lwasm  -o "${BIN_FILE}" "$ASM_FILE"
+decb dskini "${DSK_FILE}"
+decb copy "${BIN_FILE}" "${DSK_FILE},${BIN_FILE}"
+decb attr "${DSK_FILE},${BIN_FILE}" -2 -b
+cp "${ASM_FILE}" "${CURRENT_DIR}"
+cp "${BIN_FILE}" "${CURRENT_DIR}"
+cp "${DSK_FILE}" "${CURRENT_DIR}"
+
+# Clean up
+cd "${CURRENT_DIR}"
+echo To clean up, enter: \"rm -r "${tmpdir}"\"
