@@ -144,12 +144,13 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout 5cbdd5916db32d3f1a65c7c4539b677ad7e13045 && \
-    unzip BasTo6809_V1.16.zip && \
-    cd BasTo6809_V1.16 && \
-    ln -s PRINT.ASM Basic_Includes/PRINT.asm && \
+    git checkout 0cde22b4212d8c3d29cdb78623c2fcb34e085c99 && \
+    BASTO6809=BasTo6809_V1.19 && \
+    unzip ${BASTO6809}.zip && \
+    mv ${BASTO6809} ../basto6809 && \
+    cd ../basto6809 && \
     sleep 1 && \
-    ../../QB64pe/qb64pe BasTo6809.bas -c -o basto6809
+    ../QB64pe/qb64pe BasTo6809.bas -c -o basto6809
 ADD utils/basto6809todsk /usr/local/bin
 
 # Clean up
