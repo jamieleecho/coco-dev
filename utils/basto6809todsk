@@ -16,7 +16,7 @@ CURRENT_DIR="`pwd`"
 # Create a working folder
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'tmpdir')
 echo Copying compiler and source file to ${tmpdir}
-cp -R /root/basto6809/* ${tmpdir}
+cp -R /root/BASIC-To-6809/* ${tmpdir}
 cp $1 ${tmpdir}
 cd ${tmpdir}
 

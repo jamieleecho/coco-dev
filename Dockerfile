@@ -37,7 +37,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python3-distutils \
     python3-tk \
     software-properties-common \
-    unzip \
     vim \
     xvfb \
     zlib1g-dev && \
@@ -53,7 +52,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     pypng==0.0.20 \
     setuptools==60.9.3 \
     wand==0.5.7 \
-    coco-tools==0.8 \
+    coco-tools==0.17 \
     milliluk-tools==0.1 \
     mc10-tools==0.5
 
@@ -74,9 +73,9 @@ RUN tar -zxpvf cmoc-0.1.88.tar.gz && \
   (cd cmoc-0.1.88 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
-RUN hg clone http://hg.code.sf.net/p/nitros9/code nitros9-code && \
-  (cd nitros9-code && \
-  hg checkout 6b7a7b233925 && \
+RUN git clone https://github.com/nitros9project/nitros9.git && \
+  (cd nitros9 && \
+  git checkout e490ce8 && \
   mkdir -p /usr/local/share/lwasm && \
   cp -R defs/* /usr/local/share/lwasm/)
 
@@ -96,13 +95,13 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   (cd tasm6801 && \
-  git checkout 8370ade && \
+  git checkout 0820625 && \
   cd src && \
   make -j && \
   cp ../tasm6801 /usr/local/bin && \
   make -j) && \
   (cd mcbasic && \
-  git checkout f8df0e0 && \
+  git checkout 1030ec4 && \
   make -j && \
   cp mcbasic /usr/local/bin && \
   make clean)
@@ -144,13 +143,11 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout 0cde22b4212d8c3d29cdb78623c2fcb34e085c99 && \
-    BASTO6809=BasTo6809_V1.19 && \
-    unzip ${BASTO6809}.zip && \
-    mv ${BASTO6809} ../basto6809 && \
-    cd ../basto6809 && \
+    git checkout 0501721 && \
     sleep 1 && \
-    ../QB64pe/qb64pe BasTo6809.bas -c -o basto6809
+    ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
+    ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
+    ../QB64pe/qb64pe BasTo6809.2.Compile.bas -x -o BasTo6809.2.Compile
 ADD utils/basto6809todsk /usr/local/bin
 
 # Clean up
