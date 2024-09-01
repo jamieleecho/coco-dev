@@ -3,9 +3,6 @@
   "schemeDefinition": "major.minor[.build][->patch]",
   "versionFile": "./package.json",
   "files": [{
-    "path": "Dockerfile",
-    "line": 3
-  }, {
     "path": "coco-dev",
     "line": 10
   }, {
