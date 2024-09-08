@@ -54,7 +54,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     wand==0.5.7 \
     coco-tools==0.17 \
     milliluk-tools==0.1 \
-    mc10-tools==0.5
+    mc10-tools==0.6
 
 # Install lwtools
 ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.22.tar.gz lwtools-4.22.tar.gz
