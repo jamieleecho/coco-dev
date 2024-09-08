@@ -19,7 +19,7 @@ applications. It implements a Docker image that includes the following tools:
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
-  * [mc10-tools 0.6](https://github.com/jamieleecho/mc10-tools)
+  * [mc10-tools 0.8](https://github.com/jamieleecho/mc10-tools)
   * [mcbasic](https://github.com/gregdionne/mcbasic)
   * [tasm6801](https://github.com/gregdionne/tasm6801)
 
