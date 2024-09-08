@@ -11,6 +11,8 @@ jobs:
     steps:
       # Checkout action is required
       - uses: actions/checkout@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -20,4 +22,9 @@ jobs:
           CI: false
         with:
           options-file: './bump-info.json'
-          github-token: ${{ secrets.ADMIN_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run make-release.yml --ref `grep "version" package.json | sed 's/.*: *"//' | sed 's/" *//'`

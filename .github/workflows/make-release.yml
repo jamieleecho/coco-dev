@@ -1,15 +1,16 @@
 name: Make a New Release
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
 
 jobs:
-  main:
+  create-release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
+        with:
+         ref: ${{ github.ref }}
       - name: Get the tag
         run: |
           echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
