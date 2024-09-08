@@ -27,4 +27,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run make-release.yml --ref `grep "version" package.json | sed 's/.*: *"//' | sed 's/" *//'`
+          gh workflow run make-release.yml --ref refs/tags/`grep "version" package.json | sed 's/.*: *"//' | sed 's/" *//'`
