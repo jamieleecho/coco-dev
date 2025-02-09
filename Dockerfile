@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL org.opencontainers.image.authors="Jamie Cho"
 
@@ -32,25 +32,23 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     markdown \
     mesa-common-dev \
     p7zip \
+    pipx \
+    python-is-python3 \
     python3 \
     python3-dev \
-    python3-distutils \
+    python3-numpy \
+    python3-pillow \
     python3-tk \
+    python3-wand \
     software-properties-common \
     vim \
     xvfb \
     zlib1g-dev && \
   apt-get clean
 
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
-  update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
-  curl https://bootstrap.pypa.io/get-pip.py | python && \
-  pip install \
-    numpy==2.2.2 \
-    Pillow==11.1.0 \
+RUN pipx ensurepath && \
+  pipx install \
     pypng==0.20220715.0 \
-    setuptools==75.8.0 \
-    wand==0.6.13 \
     coco-tools==0.19 \
     milliluk-tools==0.1 \
     mc10-tools==0.8
@@ -131,7 +129,8 @@ WORKDIR /home/mrinstaller
 RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
     cd QB64pe && \
     git checkout 56990e1a605cb639acc1ecf30619ec6f4fbcd3fa && \
-    ./setup_lnx.sh
+    ./setup_lnx.sh && \
+    (yes | rm -r .git)
 
 # Move qb64 to /root and Install BASIC-To-6809
 USER root
