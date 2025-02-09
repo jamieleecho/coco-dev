@@ -21,7 +21,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     freeglut3-dev \
     fuse \
     g++-10 \
-    gettext \ 
     git \
     imagemagick \
     libcurl4-openssl-dev \
@@ -47,7 +46,6 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
   update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
   curl https://bootstrap.pypa.io/get-pip.py | python && \
   pip install \
-    mercurial==6.9.1 \
     numpy==2.2.2 \
     Pillow==11.1.0 \
     pypng==0.20220715.0 \
