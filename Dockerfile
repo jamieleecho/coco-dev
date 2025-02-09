@@ -21,6 +21,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     freeglut3-dev \
     fuse \
     g++-10 \
+    gettext \ 
     git \
     imagemagick \
     libcurl4-openssl-dev \
