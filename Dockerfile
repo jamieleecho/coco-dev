@@ -68,9 +68,9 @@ RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.89.tar.gz cmoc-0.1.89.tar.gz
-RUN tar -zxpvf cmoc-0.1.89.tar.gz && \
-  (cd cmoc-0.1.89 && ./configure && make && make install && make clean)
+ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.90.tar.gz cmoc-0.1.90.tar.gz
+RUN tar -zxpvf cmoc-0.1.90.tar.gz && \
+  (cd cmoc-0.1.90 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
@@ -143,7 +143,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout 8f8a1aa && \
+    git checkout 309a55be72365192b6b88305418403fca9a2f701 && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
