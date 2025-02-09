@@ -15,7 +15,7 @@ applications. It implements a Docker image that includes the following tools:
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [salvador](https://github.com/emmanuel-marty/salvador)
-  * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
+  * [ToolShed 2.3](https://sourceforge.net/p/toolshed/wiki/Home/)
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10

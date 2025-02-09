@@ -57,14 +57,14 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     mc10-tools==0.8
 
 # Install lwtools
-ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.22.tar.gz lwtools-4.22.tar.gz
-RUN tar -zxpvf lwtools-4.22.tar.gz && \
-  (cd lwtools-4.22 && make -j install CC=gcc && make clean)
+ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.23.tar.gz lwtools-4.23.tar.gz
+RUN tar -zxpvf lwtools-4.23.tar.gz && \
+  (cd lwtools-4.23 && make -j install CC=gcc && make clean)
 
 # Install Toolshed
-RUN hg clone http://hg.code.sf.net/p/toolshed/code toolshed-code && \
-  (cd toolshed-code && \
-   hg up v2_2 && \
+RUN git clone https://github.com/nitros9project/toolshed.git && \
+  (cd toolshed && \
+   git checkout v2_2 && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
