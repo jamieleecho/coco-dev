@@ -6,7 +6,8 @@ on:
 
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04-arm
+    arch: arm64
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
