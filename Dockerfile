@@ -46,12 +46,12 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
   update-alternatives --install /usr/bin/python python /usr/bin/python3.10 2 && \
   curl https://bootstrap.pypa.io/get-pip.py | python && \
   pip install \
-    mercurial==6.2.2 \
-    numpy==1.22.2 \
-    Pillow==7.0.0 \
-    pypng==0.0.20 \
-    setuptools==60.9.3 \
-    wand==0.5.7 \
+    mercurial==6.9.1 \
+    numpy==2.2.2 \
+    Pillow==11.1.0 \
+    pypng==0.20220715.0 \
+    setuptools==75.8.0 \
+    wand==0.6.13 \
     coco-tools==0.19 \
     milliluk-tools==0.1 \
     mc10-tools==0.8
