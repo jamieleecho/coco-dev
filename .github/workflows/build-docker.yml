@@ -21,7 +21,7 @@ jobs:
           fi
 
   build_and_push_image:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     needs: create_tag
     strategy:
       matrix:
@@ -78,7 +78,7 @@ jobs:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
           docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04
-          docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm64
+          docker pull --platform arm64 jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm64
           docker manifest create \
             jamieleecho/coco-dev:mytest \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \

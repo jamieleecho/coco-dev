@@ -11,10 +11,12 @@ jobs:
       - uses: actions/checkout@master
         with:
          ref: ${{ github.ref }}
+
       - name: Get the tag
         run: |
           echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
           echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
