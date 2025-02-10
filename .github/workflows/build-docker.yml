@@ -78,6 +78,6 @@ jobs:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
           docker buildx imagetools create \
-            -t jamieleecho/coco-dev:mytest \
-            --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
-            --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
+            -t jamieleecho/coco-dev:latest,jamieleecho/coco-dev:${{ env.RELEASE_TAG }} \
+            jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
+            jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
