@@ -5,12 +5,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push-image:
+  create_tag:
     runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.create_release_tag.outputs.release_tag }}
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - name: Get the release_tag
+        id: create_release_tag
+        run: |
+          if [[ $GITHUB_REF == refs/tags* ]]
+          then
+            echo "release_tag=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_tag=ignore" >> "$GITHUB_OUTPUT"
+          fi
 
+  build_and_push_image:
+    runs-on: ${{ matrix.os }}
+    needs: create_tag
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+
+    steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -20,26 +39,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get the tag
-        run: |
-          if [[ $GITHUB_REF == refs/tags* ]]
-          then
-            echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          else
-            echo "RELEASE_TAG=ignore" >> $GITHUB_ENV
-          fi
-
       - name: Build and push image
-        uses: docker/build-push-action@v5
+        env:
+          RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
+        uses: docker/build-push-action@v6
         with:
           push: ${{ startsWith(github.ref, 'refs/tags') }}
-          platforms: linux/amd64,linux/arm64
-          tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}, jamieleecho/coco-dev:latest
+          tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-${{ matrix.os }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
 
       - uses: actions/checkout@v3
         if: startsWith(github.ref, 'refs/tags')
@@ -51,3 +59,27 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: jamieleecho/coco-dev
+
+  make-multi-arch-image:
+    if: ${{ startsWith(github.ref, 'refs/tags') }}
+    runs-on: ubuntu-latest
+    needs:
+      - create_tag
+      - build_and_push_image
+
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create multi-arch image
+        env:
+          RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
+        run: |
+          docker buildx imagetools create \
+            -t jamieleecho/coco-dev:latest \
+            -t jamieleecho/coco-dev:${{ env.RELEASE_TAG }} \
+            jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
+            jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm

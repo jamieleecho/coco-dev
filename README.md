@@ -6,7 +6,7 @@ applications. It implements a Docker image that includes the following tools:
   * [BasTo6809 V4.01]()
   * [CMOC 0.1.90](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
-  * [LWTOOLS 4.22](http://lwtools.projects.l-w.ca)
+  * [LWTOOLS 4.23](http://lwtools.projects.l-w.ca)
   * [naken](http://www.mikekohn.net/micro/naken_asm.php)
   * [nitros9/defs](https://github.com/nitros9project/nitros9/tree/main/defs)
 
@@ -15,7 +15,7 @@ applications. It implements a Docker image that includes the following tools:
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [salvador](https://github.com/emmanuel-marty/salvador)
-  * [ToolShed 2.2](https://sourceforge.net/p/toolshed/wiki/Home/)
+  * [ToolShed 2.3](https://sourceforge.net/p/toolshed/wiki/Home/)
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
