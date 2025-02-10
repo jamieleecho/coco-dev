@@ -73,7 +73,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create multi-atch manifest
+      - name: Create multi-arch manifest
         env:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
@@ -81,4 +81,3 @@ jobs:
             jamieleecho/coco-dev:mytest \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
-          docker manifest push jamieleecho/coco-dev:mytest
