@@ -27,7 +27,7 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-          - ubuntu-24.04-arm64
+          - ubuntu-24.04-arm
 
     steps:
       - name: Set up Docker Buildx
@@ -78,9 +78,9 @@ jobs:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
           docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04
-          docker pull --platform arm64 jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm64
+          docker pull --platform arm64 jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
           docker manifest create \
             jamieleecho/coco-dev:mytest \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
-            --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm64
+            --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
           docker manifest push jamieleecho/coco-dev:mytest
