@@ -42,7 +42,7 @@ jobs:
       - name: Build and push image
         env:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: ${{ true }}
           tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-${{ matrix.os }}
@@ -73,13 +73,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Login to DockerHub
+      - name: Create multi-atch manifest
         env:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
-          docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04
-          docker pull --platform arm64 jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
-          docker manifest create \
+          docker buildx -t \
             jamieleecho/coco-dev:mytest \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm
