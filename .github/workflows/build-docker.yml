@@ -77,6 +77,8 @@ jobs:
         env:
           RELEASE_TAG: ${{ needs.create_tag.outputs.release_tag }}
         run: |
+          docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04
+          docker pull jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04-arm64
           docker manifest create \
             jamieleecho/coco-dev:mytest \
             --amend jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-ubuntu-24.04 \
