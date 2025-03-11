@@ -12,6 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
+    bc \
     bison \
     build-essential \
     default-jdk \
@@ -65,7 +66,7 @@ RUN git clone https://github.com/nitros9project/toolshed.git && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://perso.b2b2c.ca/~sarrazip/dev/cmoc-0.1.90.tar.gz cmoc-0.1.90.tar.gz
+ADD http://sarrazip.com/dev/cmoc-0.1.90.tar.gz cmoc-0.1.90.tar.gz
 RUN tar -zxpvf cmoc-0.1.90.tar.gz && \
   (cd cmoc-0.1.90 && ./configure && make && make install && make clean)
 
@@ -141,7 +142,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout 309a55be72365192b6b88305418403fca9a2f701 && \
+    git checkout d608134d7556d33c1f3405066e6206e6ba3b2100 && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
