@@ -3,7 +3,7 @@ This repo implements a simplified environment for developing [Tandy
 Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 * CoCo Languages and Libraries
-  * [BasTo6809 V4.24](https://github.com/nowhereman999/BASIC-To-6809)
+  * [BasTo6809 V4.29](https://github.com/nowhereman999/BASIC-To-6809)
   * [CMOC 0.1.90](http://sarrazip.com/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.23](http://lwtools.projects.l-w.ca)
@@ -11,7 +11,7 @@ applications. It implements a Docker image that includes the following tools:
   * [nitros9/defs](https://github.com/nitros9project/nitros9/tree/main/defs)
 
 * CoCo Development Utilities
-  * [coco-tools 0.19](https://github.com/jamieleecho/coco-tools)
+  * [coco-tools 0.24](https://github.com/jamieleecho/coco-tools)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [salvador](https://github.com/emmanuel-marty/salvador)
@@ -19,7 +19,7 @@ applications. It implements a Docker image that includes the following tools:
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
-  * [mc10-tools 0.8](https://github.com/jamieleecho/mc10-tools)
+  * [mc10-tools 0.9](https://github.com/jamieleecho/mc10-tools)
   * [mcbasic](https://github.com/gregdionne/mcbasic)
   * [tasm6801](https://github.com/gregdionne/tasm6801)
 
