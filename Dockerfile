@@ -50,9 +50,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 RUN pipx ensurepath && \
   pipx install \
     pypng==0.20220715.0 \
-    coco-tools==0.19 \
+    coco-tools==0.24 \
     milliluk-tools==0.1 \
-    mc10-tools==0.8
+    mc10-tools==0.9
 
 # Install lwtools
 ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.23.tar.gz lwtools-4.23.tar.gz
@@ -142,7 +142,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout d608134d7556d33c1f3405066e6206e6ba3b2100 && \
+    git checkout c6a5b83106ef24a5c0704783786a9e40ffcec8ef && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
