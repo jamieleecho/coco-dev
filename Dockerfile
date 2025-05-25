@@ -38,6 +38,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python3 \
     python3-dev \
     python3-numpy \
+    python3-pip \
     python3-pillow \
     python3-tk \
     python3-wand \
