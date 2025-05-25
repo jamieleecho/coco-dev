@@ -37,23 +37,27 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python-is-python3 \
     python3 \
     python3-dev \
-    python3-numpy \
-    python3-pip \
-    python3-pillow \
     python3-tk \
-    python3-wand \
     software-properties-common \
     vim \
     xvfb \
     zlib1g-dev && \
   apt-get clean
 
-RUN pipx ensurepath && \
-  pipx install \
-    pypng==0.20220715.0 \
+
+RUN python -m venv venv && \
+    . venv/bin/activate
+ENV VIRTUAL_ENV=/root/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install \
     coco-tools==0.24 \
     milliluk-tools==0.1 \
-    mc10-tools==0.9
+    mc10-tools==0.9 && \
+    numpy==2.2.6 && \
+    pillow==11.2.1 \
+    pypng==0.20220715.0 \
+    wand=0.6.13
 
 # Install lwtools
 ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz lwtools-4.24.tar.gz
