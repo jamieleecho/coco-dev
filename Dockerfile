@@ -37,27 +37,32 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python-is-python3 \
     python3 \
     python3-dev \
-    python3-numpy \
-    python3-pillow \
     python3-tk \
-    python3-wand \
     software-properties-common \
     vim \
     xvfb \
     zlib1g-dev && \
   apt-get clean
 
-RUN pipx ensurepath && \
-  pipx install \
-    pypng==0.20220715.0 \
+
+RUN python -m venv venv && \
+    . venv/bin/activate
+ENV VIRTUAL_ENV=/root/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install \
     coco-tools==0.24 \
     milliluk-tools==0.1 \
-    mc10-tools==0.9
+    mc10-tools==0.9 && \
+    numpy==2.2.6 && \
+    pillow==11.2.1 \
+    pypng==0.20220715.0 \
+    wand=0.6.13
 
 # Install lwtools
-ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.23.tar.gz lwtools-4.23.tar.gz
-RUN tar -zxpvf lwtools-4.23.tar.gz && \
-  (cd lwtools-4.23 && make -j install CC=gcc && make clean)
+ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz lwtools-4.24.tar.gz
+RUN tar -zxpvf lwtools-4.24.tar.gz && \
+  (cd lwtools-4.24 && make -j install CC=gcc && make clean)
 
 # Install Toolshed
 RUN git clone https://github.com/nitros9project/toolshed.git && \
@@ -142,7 +147,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout c6a5b83106ef24a5c0704783786a9e40ffcec8ef && \
+    git checkout ef4c9c7a23a898627828c98cbe5c20aa9b059e41 && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
