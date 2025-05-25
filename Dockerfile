@@ -56,9 +56,9 @@ RUN pipx ensurepath && \
     mc10-tools==0.9
 
 # Install lwtools
-ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.23.tar.gz lwtools-4.23.tar.gz
-RUN tar -zxpvf lwtools-4.23.tar.gz && \
-  (cd lwtools-4.23 && make -j install CC=gcc && make clean)
+ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz lwtools-4.24.tar.gz
+RUN tar -zxpvf lwtools-4.24.tar.gz && \
+  (cd lwtools-4.24 && make -j install CC=gcc && make clean)
 
 # Install Toolshed
 RUN git clone https://github.com/nitros9project/toolshed.git && \
@@ -143,7 +143,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout c6a5b83106ef24a5c0704783786a9e40ffcec8ef && \
+    git checkout ef4c9c7a23a898627828c98cbe5c20aa9b059e41 && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
