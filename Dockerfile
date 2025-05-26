@@ -53,11 +53,14 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install \
     coco-tools==0.24 \
     milliluk-tools==0.1 \
-    mc10-tools==0.9 && \
-    numpy==2.2.6 && \
+    mc10-tools==0.9 \
+    mypy==1.15.0 \
+    numpy==2.2.6 \
     pillow==11.2.1 \
     pypng==0.20220715.0 \
-    wand=0.6.13
+    ruff==0.11.11 \
+    uv==0.1.32 \
+    wand==0.6.13
 
 # Install lwtools
 ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz lwtools-4.24.tar.gz
