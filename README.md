@@ -5,8 +5,8 @@ Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 
 * CoCo Languages and Libraries
-  * [BasTo6809 V4.41](https://github.com/nowhereman999/BASIC-To-6809)
-  * [CMOC 0.1.91](http://sarrazip.com/dev/cmoc.html)
+  * [BasTo6809 V4.42](https://github.com/nowhereman999/BASIC-To-6809)
+  * [CMOC 0.1.96](http://sarrazip.com/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.24](http://lwtools.projects.l-w.ca)
   * [naken](http://www.mikekohn.net/micro/naken_asm.php)
@@ -17,7 +17,7 @@ applications. It implements a Docker image that includes the following tools:
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [salvador](https://github.com/emmanuel-marty/salvador)
-  * [ToolShed 2.3](https://sourceforge.net/p/toolshed/wiki/Home/)
+  * [ToolShed 2.4.2](https://github.com/nitros9project/toolshed)
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
