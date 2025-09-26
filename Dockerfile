@@ -70,18 +70,18 @@ RUN tar -zxpvf lwtools-4.24.tar.gz && \
 # Install Toolshed
 RUN git clone https://github.com/nitros9project/toolshed.git && \
   (cd toolshed && \
-   git checkout v2_2 && \
+   git checkout v2_4_2 && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://sarrazip.com/dev/cmoc-0.1.91.tar.gz cmoc-0.1.91.tar.gz
-RUN tar -zxpvf cmoc-0.1.91.tar.gz && \
-  (cd cmoc-0.1.91 && ./configure && make && make install && make clean)
+ADD http://sarrazip.com/dev/cmoc-0.1.96.tar.gz cmoc-0.1.96.tar.gz
+RUN tar -zxpvf cmoc-0.1.96.tar.gz && \
+  (cd cmoc-0.1.96 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
   (cd nitros9 && \
-  git checkout e490ce8 && \
+  git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
   mkdir -p /usr/local/share/lwasm && \
   cp -R defs/* /usr/local/share/lwasm/)
 
@@ -89,10 +89,10 @@ RUN git clone https://github.com/nitros9project/nitros9.git && \
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
   (cd naken_asm && \
-  git checkout aa692552769c831cf4f937915bb96f618fc04e7e && \
+  git checkout b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
   ./configure && make -j && make install && \
   cd ../java_grinder && \
-  git checkout 3aac128792d3293270e19b28d9da6c0b99423fab && \
+  git checkout 4dca222bae458766c320f045c015754aa6c17376 && \
   make -j && make java && \
   (cd samples/trs80_coco && make -j grind) && \
   cp java_grinder /usr/local/bin/)
@@ -121,7 +121,7 @@ RUN git clone https://github.com/einar-saukas/ZX0 && \
 # Install salvador (fast near-optimal ZX0 compressor)
 RUN git clone https://github.com/emmanuel-marty/salvador && \
   (cd salvador && \
-  git checkout a1b10b03f690ab1fa2f3313d47c9111479114182 && \
+  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
   mkdir clang-hack && \
   ln -s /usr/bin/cc clang-hack/clang && \
   (PATH=./clang-hack:$PATH make -j) && \
@@ -137,7 +137,7 @@ WORKDIR /home/mrinstaller
 # Install qb64
 RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
     cd QB64pe && \
-    git checkout 56990e1a605cb639acc1ecf30619ec6f4fbcd3fa && \
+    git checkout dc8378ee7e0071143cd4314a4f84a1c9d459ae76 && \
     ./setup_lnx.sh && \
     (yes | rm -r .git)
 
@@ -150,7 +150,7 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout f0082b2b11dfc46798accca310577adf9a78fd94 && \
+    git checkout 5d6a7220db8e673b7e42c221ae65518d6b29f92d && \
     sleep 1 && \
     ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
