@@ -74,9 +74,9 @@ RUN git clone https://github.com/nitros9project/toolshed.git && \
    make -j -C build/unix install CC=gcc)
 
 # Install CMOC
-ADD http://sarrazip.com/dev/cmoc-0.1.96.tar.gz cmoc-0.1.96.tar.gz
-RUN tar -zxpvf cmoc-0.1.96.tar.gz && \
-  (cd cmoc-0.1.96 && ./configure && make && make install && make clean)
+ADD http://sarrazip.com/dev/cmoc-0.1.97.tar.gz cmoc-0.1.97.tar.gz
+RUN tar -zxpvf cmoc-0.1.97.tar.gz && \
+  (cd cmoc-0.1.97 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
@@ -137,7 +137,7 @@ WORKDIR /home/mrinstaller
 # Install qb64
 RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
     cd QB64pe && \
-    git checkout dc8378ee7e0071143cd4314a4f84a1c9d459ae76 && \
+    git checkout v4.2.0 && \
     ./setup_lnx.sh && \
     (yes | rm -r .git)
 
@@ -150,12 +150,16 @@ RUN mv /home/mrinstaller/QB64pe /root && \
     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
     export DISPLAY=:1 && \
     cd BASIC-To-6809 && \
-    git checkout 5d6a7220db8e673b7e42c221ae65518d6b29f92d && \
+    git checkout 2e97cc0f52bb5163a14358248142ecc854b86c8c && \
     sleep 1 && \
-    ../QB64pe/qb64pe BasTo6809.bas -x -o basto6809 && \
-    ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -o BasTo6809.1.Tokenizer && \
-    ../QB64pe/qb64pe BasTo6809.2.Compile.bas -x -o BasTo6809.2.Compile
-ADD utils/basto6809todsk /usr/local/bin
+    ../QB64pe/qb64pe BasTo6809.bas -x -f:OptimizeCppProgram=false -o basto6809 && \
+    ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -f:OptimizeCppProgram=false -o BasTo6809.1.Tokenizer && \
+    ../QB64pe/qb64pe BasTo6809.2.Compile.bas -x -f:OptimizeCppProgram=false -o BasTo6809.2.Compile && \
+    ../QB64pe/qb64pe cc1sl.bas -x -f:OptimizeCppProgram=false -o cc1sl && \
+    ../QB64pe/qb64pe PNGtoCC3Playfield.bas -x -f:OptimizeCppProgram=false -o PNGtoCC3Playfield && \
+    ../QB64pe/qb64pe PNGtoCCSB.bas -x -f:OptimizeCppProgram=false -o PNGtoCCSB && \
+    cp Manual.pdf /usr/local/share/doc/basto6809.pdf
+  ADD utils/basto6809todsk /usr/local/bin
 
 # Clean up
 RUN ln -s /home /Users
