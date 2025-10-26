@@ -7,7 +7,7 @@ else
   params=( bash )
 fi
 
-COCO_DEV_IMAGE=jamieleecho/coco-dev:0.69
+COCO_DEV_IMAGE=jamieleecho/coco-dev:0.70
 
 case "$(uname -s)" in
 
