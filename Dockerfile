@@ -58,9 +58,49 @@ RUN pip install \
     numpy==2.2.6 \
     pillow==11.2.1 \
     pypng==0.20220715.0 \
-    ruff==0.11.11 \
-    uv==0.1.32 \
+    ruff==0.14.3 \
+    uv==0.9.7 \
     wand==0.6.13
+
+# Install preprocessor
+RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
+  (cd preprocessor && \
+   git checkout 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   cp decbpp /usr/local/bin/) && \
+  (yes | rm -r preprocessor)
+
+# Create a user for installs
+RUN adduser mrinstaller
+USER mrinstaller
+WORKDIR /home/mrinstaller
+
+# Install qb64
+RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
+    cd QB64pe && \
+    git checkout v4.2.0 && \
+    ./setup_lnx.sh && \
+    (yes | rm -r .git)
+
+# Resume as root
+USER root
+WORKDIR /root
+
+# Install ZX0 data compressor
+RUN git clone https://github.com/einar-saukas/ZX0 && \
+  (cd "ZX0/src" && \
+  make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
+  cp zx0 dzx0 /usr/local/bin)
+
+# Install salvador (fast near-optimal ZX0 compressor)
+RUN git clone https://github.com/emmanuel-marty/salvador && \
+  (cd salvador && \
+  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  mkdir clang-hack && \
+  ln -s /usr/bin/cc clang-hack/clang && \
+  (PATH=./clang-hack:$PATH make -j) && \
+  rm -r ./clang-hack && \
+  cp salvador /usr/local/bin && \
+  make clean)
 
 # Install lwtools
 ADD http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz lwtools-4.24.tar.gz
@@ -72,11 +112,6 @@ RUN git clone https://github.com/nitros9project/toolshed.git && \
   (cd toolshed && \
    git checkout v2_4_2 && \
    make -j -C build/unix install CC=gcc)
-
-# Install CMOC
-ADD http://sarrazip.com/dev/cmoc-0.1.97.tar.gz cmoc-0.1.97.tar.gz
-RUN tar -zxpvf cmoc-0.1.97.tar.gz && \
-  (cd cmoc-0.1.97 && ./configure && make && make install && make clean)
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
@@ -112,38 +147,12 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
   cp mcbasic /usr/local/bin && \
   make clean)
 
-# Install ZX0 data compressor
-RUN git clone https://github.com/einar-saukas/ZX0 && \
-  (cd "ZX0/src" && \
-  make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
-  cp zx0 dzx0 /usr/local/bin)
-
-# Install salvador (fast near-optimal ZX0 compressor)
-RUN git clone https://github.com/emmanuel-marty/salvador && \
-  (cd salvador && \
-  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
-  mkdir clang-hack && \
-  ln -s /usr/bin/cc clang-hack/clang && \
-  (PATH=./clang-hack:$PATH make -j) && \
-  rm -r ./clang-hack && \
-  cp salvador /usr/local/bin && \
-  make clean)
-
-# Create a user for installs
-RUN adduser mrinstaller
-USER mrinstaller
-WORKDIR /home/mrinstaller
-
-# Install qb64
-RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
-    cd QB64pe && \
-    git checkout v4.2.0 && \
-    ./setup_lnx.sh && \
-    (yes | rm -r .git)
+# Install CMOC
+ADD http://sarrazip.com/dev/cmoc-0.1.97.tar.gz cmoc-0.1.97.tar.gz
+RUN tar -zxpvf cmoc-0.1.97.tar.gz && \
+  (cd cmoc-0.1.97 && ./configure && make && make install && make clean)
 
 # Move qb64 to /root and Install BASIC-To-6809
-USER root
-WORKDIR /root
 RUN mv /home/mrinstaller/QB64pe /root && \
     chown -R root:root /root/QB64pe && \
     (Xvfb :1 -screen 0 800x600x24+32 &) && \

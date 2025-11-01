@@ -16,6 +16,7 @@ applications. It implements a Docker image that includes the following tools:
   * [coco-tools 0.24](https://pypi.org/project/coco-tools/)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
+  * [preprocessor](https://github.com/yggdrasilradio/preprocessor)
   * [salvador](https://github.com/emmanuel-marty/salvador)
   * [ToolShed 2.4.2](https://github.com/nitros9project/toolshed)
   * [ZX0](https://github.com/einar-saukas/ZX0)
