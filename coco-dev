@@ -16,7 +16,7 @@ case "$(uname -s)" in
      ;;
 
    Linux)
-     docker run -it --rm -w "$(pwd)" -v "$HOME"/..:/home -e HOME=/home/"$USER" ${COCO_DEV_IMAGE} ${params[@]}
+     docker run -u "$(id -u):$(id -g)" -it --rm -w "$(pwd)" -v /etc/passwd:/etc/passwd -v "$HOME"/..:/home -e HOME=/home/"$USER" ${COCO_DEV_IMAGE} ${params[@]}
      ;;
 
    CYGWIN*|MINGW32*|MSYS*)
