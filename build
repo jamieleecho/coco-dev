@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
+# Build and tag are now handled in a single step
 docker compose -f docker-compose.build.yml build
-docker tag coco-dev-coco-dev:latest jamieleecho/coco-dev:0.71

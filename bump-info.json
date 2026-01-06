@@ -6,7 +6,7 @@
     "path": "coco-dev",
     "line": 10
   }, {
-    "path": "build",
+    "path": "docker-compose.build.yml",
     "line": 4
   }],
   "rules": [{
