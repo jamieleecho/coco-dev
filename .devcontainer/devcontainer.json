@@ -1,0 +1,19 @@
+{
+  "name": "coco-dev Environment",
+  "image": "jamieleecho/coco-dev:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "blairleduc.6x09-assembly",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.makefile-tools",
+        "ms-azuretools.vscode-docker",
+        "ms-python.debugpy",
+        "ms-python.mypy-type-checker",
+        "ms-python.python"
+      ]
+    }
+  },
+  "forwardPorts": [3000],
+  "postCreateCommand": "./.devcontainer/post-create-command.sh"
+}

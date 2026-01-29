@@ -51,6 +51,8 @@ On Mac systems you must share `/Users` with Docker. To do this:
 
 ## Using coco-dev
 
+### Shell
+
 ```bash
 # Start the Docker application if it is not already running
 git clone https://github.com/jamieleecho/coco-dev.git
@@ -60,6 +62,12 @@ coco-dev/coco-dev
 This will create a Linux shell in your home directory. You can `cd` into
 your target folder and use typical development commands such as `lwasm`,
 `lwlink`, `decb`, `os9` and `cmoc`
+
+### Dev Containers
+
+coco-dev can be used as a base image for Visual Studio Code Dev Containers.
+To get started, simply copy the example `.devcontainer` folder to the root of
+your project folder and open the folder in VS Code. See the [documentation](https://code.visualstudio.com/docs/devcontainers/containers) for more information.
 
 ## Building coco-dev
 

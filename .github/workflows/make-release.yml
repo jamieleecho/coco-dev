@@ -3,6 +3,9 @@ name: Make a New Release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   create-release:
     name: Create GitHub Release
