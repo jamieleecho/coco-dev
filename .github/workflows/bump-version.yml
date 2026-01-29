@@ -5,7 +5,9 @@ on:
 
 permissions:
   contents: write
-
+  pull-requests: write
+  repository-projects: write
+  
 jobs:
   bump:
     if: ${{ !contains(github.event.head_commit.author.name, 'version-bumper') }}
