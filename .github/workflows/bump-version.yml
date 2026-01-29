@@ -3,7 +3,9 @@ name: Bump and Tag Version
 on:
   workflow_dispatch:
 
-permissions: write-all
+permissions:
+  actions: write
+  contents: write
 
 jobs:
   bump:
@@ -20,18 +22,19 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Bump Versions
-        uses: michmich112/version-bumper@master
-        env:
-          CI: false
-        with:
-          options-file: './bump-info.json'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Bump Versions
+      #   uses: michmich112/version-bumper@master
+      #   env:
+      #     CI: false
+      #   with:
+      #     options-file: './bump-info.json'
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ref=refs/tags/`grep "version" package.json | sed 's/.*: *"//' | sed 's/" *//'`
+          ref=demo
           gh workflow run build-docker.yml --ref ${ref}
           gh workflow run make-release.yml --ref ${ref}
