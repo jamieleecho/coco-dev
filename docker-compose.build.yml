@@ -1,4 +1,4 @@
 services:
   coco-dev:
     build: .
-    image: jamieleecho/coco-dev:0.74  # keep this on line 4
+    image: jamieleecho/coco-dev:0.71  # keep this on line 4

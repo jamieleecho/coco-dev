@@ -3,11 +3,8 @@ name: Bump and Tag Version
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-  repository-projects: write
-  
+permissions: write-all
+
 jobs:
   bump:
     if: ${{ !contains(github.event.head_commit.author.name, 'version-bumper') }}
