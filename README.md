@@ -13,7 +13,7 @@ applications. It implements a Docker image that includes the following tools:
   * [nitros9/defs](https://github.com/nitros9project/nitros9/tree/main/defs)
 
 * CoCo Development Utilities
-  * [coco-tools 0.24](https://pypi.org/project/coco-tools/)
+  * [coco-tools 0.26](https://pypi.org/project/coco-tools/)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [preprocessor](https://github.com/yggdrasilradio/preprocessor)
