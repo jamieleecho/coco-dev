@@ -59,7 +59,7 @@ RUN python -m venv venv && \
 ENV VIRTUAL_ENV=/home/vscode/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install \
-    coco-tools==0.24 \
+    coco-tools==0.26 \
     milliluk-tools==0.1 \
     mc10-tools==0.9 \
     mypy==1.15.0 \
