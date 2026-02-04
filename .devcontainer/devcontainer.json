@@ -1,6 +1,6 @@
 {
   "name": "coco-dev Environment",
-  "image": "jamieleecho/coco-dev:latest",
+  "dockerFile": "../Dockerfile",
   "customizations": {
     "vscode": {
       "extensions": [

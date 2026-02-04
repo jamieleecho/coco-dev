@@ -171,6 +171,9 @@ RUN (Xvfb :1 -screen 0 800x600x24+32 &) && \
      (sudo cp Manual.pdf /usr/local/share/doc/basto6809.pdf)
   ADD utils/basto6809todsk /usr/local/bin
 
+# Makes github actions work a lot more easily
+USER root
+
 # Link so things work nicely with macOS
 RUN sudo ln -s /home /Users
 
