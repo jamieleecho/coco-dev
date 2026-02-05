@@ -41,7 +41,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     zlib1g-dev && \
   apt-get clean
 
-
 # Store stuff in a semi-reasonable spot
 USER vscode
 WORKDIR /home/vscode
@@ -55,11 +54,12 @@ RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
 
 # Do most installs as root
 USER root
+WORKDIR /root
 
 # Setup default python environment
 RUN python -m venv venv && \
     . venv/bin/activate
-ENV VIRTUAL_ENV=/home/vscode/venv
+ENV VIRTUAL_ENV=/root/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install \
     coco-tools==0.26 \
@@ -71,7 +71,8 @@ RUN pip install \
     pypng==0.20220715.0 \
     ruff==0.14.3 \
     uv==0.9.24 \
-    wand==0.6.13
+    wand==0.6.13 && \
+    chmod o+rx /root /root/venv
 
 # Install preprocessor
 RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
@@ -165,12 +166,12 @@ RUN (Xvfb :1 -screen 0 800x600x24+32 &) && \
      cd BASIC-To-6809 && \
      git checkout 2e97cc0f52bb5163a14358248142ecc854b86c8c && \
      sleep 1 && \
-     ../QB64pe/qb64pe BasTo6809.bas -x -f:OptimizeCppProgram=false -o basto6809 && \
-     ../QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -f:OptimizeCppProgram=false -o BasTo6809.1.Tokenizer && \
-     ../QB64pe/qb64pe BasTo6809.2.Compile.bas -x -f:OptimizeCppProgram=false -o BasTo6809.2.Compile && \
-     ../QB64pe/qb64pe cc1sl.bas -x -f:OptimizeCppProgram=false -o cc1sl && \
-     ../QB64pe/qb64pe PNGtoCC3Playfield.bas -x -f:OptimizeCppProgram=false -o PNGtoCC3Playfield && \
-     ../QB64pe/qb64pe PNGtoCCSB.bas -x -f:OptimizeCppProgram=false -o PNGtoCCSB && \
+     /home/vscode/QB64pe/qb64pe BasTo6809.bas -x -f:OptimizeCppProgram=false -o basto6809 && \
+     /home/vscode/QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -f:OptimizeCppProgram=false -o BasTo6809.1.Tokenizer && \
+     /home/vscode/QB64pe/qb64pe BasTo6809.2.Compile.bas -x -f:OptimizeCppProgram=false -o BasTo6809.2.Compile && \
+     /home/vscode/QB64pe/qb64pe cc1sl.bas -x -f:OptimizeCppProgram=false -o cc1sl && \
+     /home/vscode/QB64pe/qb64pe PNGtoCC3Playfield.bas -x -f:OptimizeCppProgram=false -o PNGtoCC3Playfield && \
+     /home/vscode/QB64pe/qb64pe PNGtoCCSB.bas -x -f:OptimizeCppProgram=false -o PNGtoCCSB && \
      (sudo cp Manual.pdf /usr/local/share/doc/basto6809.pdf)
   ADD utils/basto6809todsk /usr/local/bin
 
