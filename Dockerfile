@@ -37,22 +37,10 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python3-tk \
     software-properties-common \
     vim \
-    xvfb \
     zlib1g-dev && \
   apt-get clean
 
-# Store stuff in a semi-reasonable spot
-USER vscode
-WORKDIR /home/vscode
-
-# Install qb64
-RUN git clone https://github.com/QB64-Phoenix-Edition/QB64pe.git && \
-    cd QB64pe && \
-    git checkout v4.2.0 && \
-    ./setup_lnx.sh && \
-    (yes | rm -r .git)
-
-# Do most installs as root
+# Do installs as root
 USER root
 WORKDIR /root
 
@@ -78,105 +66,113 @@ RUN pip install \
 RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
   (cd preprocessor && \
    git checkout 62c4ace79eeffa48817f429363816d79abea77c3 && \
-   (sudo cp decbpp /usr/local/bin/)) && \
+   cp decbpp /usr/local/bin/) && \
   (yes | rm -r preprocessor)
 
 # Install ZX0 data compressor
 RUN git clone https://github.com/einar-saukas/ZX0 && \
-  (cd "ZX0/src" && \
-   make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
-   (sudo cp zx0 dzx0 /usr/local/bin))
+  cd "ZX0/src" && \
+  make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
+  cp zx0 dzx0 /usr/local/bin
 
 # Install salvador (fast near-optimal ZX0 compressor)
 RUN git clone https://github.com/emmanuel-marty/salvador && \
-  (cd salvador && \
-   git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
-   mkdir clang-hack && \
-   ln -s /usr/bin/cc clang-hack/clang && \
-   (PATH=./clang-hack:$PATH make -j) && \
-   rm -r ./clang-hack && \
-   (sudo cp salvador /usr/local/bin) && \
-   make clean)
+  cd salvador && \
+  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  mkdir clang-hack && \
+  ln -s /usr/bin/cc clang-hack/clang && \
+  (PATH=./clang-hack:$PATH make -j) && \
+  rm -r ./clang-hack && \
+  cp salvador /usr/local/bin && \
+  make clean
 
 # Install lwtools
 RUN curl -O http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz && \
   tar -zxpvf lwtools-4.24.tar.gz && \
-  (cd lwtools-4.24 && \
-   make -j CC=gcc && \
-   (sudo make install) && \
-   make clean)
+  cd lwtools-4.24 && \
+  make -j CC=gcc && \
+  make install && \
+  make clean
 
 # Install Toolshed
 RUN git clone https://github.com/nitros9project/toolshed.git && \
-  (cd toolshed && \
-   git checkout v2_4_2 && \
-   make -j -C build/unix CC=gcc && \
-   (sudo make -C build/unix install))
+  cd toolshed && \
+  git checkout v2_4_2 && \
+  make -j -C build/unix CC=gcc && \
+  make -C build/unix install
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
-  (cd nitros9 && \
-   git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
-   (sudo mkdir -p /usr/local/share/lwasm) && \
-   (sudo cp -R defs/* /usr/local/share/lwasm/))
+  cd nitros9 && \
+  git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  mkdir -p /usr/local/share/lwasm && \
+  cp -R defs/* /usr/local/share/lwasm/
 
 # Install java grinder
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   git clone https://github.com/mikeakohn/java_grinder && \
-  (cd naken_asm && \
-   git checkout b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
-   ./configure && \
-   make -j && \
-   (sudo make install) && \
-   cd ../java_grinder && \
-   git checkout 4dca222bae458766c320f045c015754aa6c17376 && \
-   make -j && \
-   make java && \
-   (cd samples/trs80_coco && make -j grind) && \
-   (sudo cp java_grinder /usr/local/bin/))
+  cd naken_asm && \
+  git checkout b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
+  ./configure && \
+  make -j && \
+  make install && \
+  cd ../java_grinder && \
+  git checkout 4dca222bae458766c320f045c015754aa6c17376 && \
+  make -j && \
+  make java && \
+  (cd samples/trs80_coco && make -j grind) && \
+  cp java_grinder /usr/local/bin/
 
 # Install tasm and mcbasic
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
-  (cd tasm6801 && \
-   git checkout 0820625 && \
-   cd src && \
-   make -j && \
-   (sudo cp ../tasm6801 /usr/local/bin) && \
-   make -j) && \
-   (cd mcbasic && \
-    git checkout 1030ec4 && \
-    make -j && \
-    (sudo cp mcbasic /usr/local/bin) && \
-   make clean)
+  cd tasm6801 && \
+  git checkout 0820625 && \
+  cd src && \
+  make -j && \
+  cp ../tasm6801 /usr/local/bin && \
+  make clean && \
+  cd ../../mcbasic && \
+  git checkout 1030ec4 && \
+  make -j && \
+  cp mcbasic /usr/local/bin && \
+  make clean
 
 # Install CMOC
 RUN curl -LO http://sarrazip.com/dev/cmoc-0.1.97.tar.gz && \
   tar -zxpvf cmoc-0.1.97.tar.gz && \
-  (cd cmoc-0.1.97 && \
-   ./configure && \
-   make && \
-   (sudo make install) && \
-   make clean)
+  cd cmoc-0.1.97 && \
+  ./configure && \
+  make && \
+  make install && \
+  make clean
 
 # Build and install BASIC-To-6809
-RUN (Xvfb :1 -screen 0 800x600x24+32 &) && \
-     git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
-     export DISPLAY=:1 && \
+RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
      cd BASIC-To-6809 && \
-     git checkout 2e97cc0f52bb5163a14358248142ecc854b86c8c && \
-     sleep 1 && \
-     /home/vscode/QB64pe/qb64pe BasTo6809.bas -x -f:OptimizeCppProgram=false -o basto6809 && \
-     /home/vscode/QB64pe/qb64pe BasTo6809.1.Tokenizer.bas -x -f:OptimizeCppProgram=false -o BasTo6809.1.Tokenizer && \
-     /home/vscode/QB64pe/qb64pe BasTo6809.2.Compile.bas -x -f:OptimizeCppProgram=false -o BasTo6809.2.Compile && \
-     /home/vscode/QB64pe/qb64pe cc1sl.bas -x -f:OptimizeCppProgram=false -o cc1sl && \
-     /home/vscode/QB64pe/qb64pe PNGtoCC3Playfield.bas -x -f:OptimizeCppProgram=false -o PNGtoCC3Playfield && \
-     /home/vscode/QB64pe/qb64pe PNGtoCCSB.bas -x -f:OptimizeCppProgram=false -o PNGtoCCSB && \
-     (sudo cp Manual.pdf /usr/local/share/doc/basto6809.pdf)
-  ADD utils/basto6809todsk /usr/local/bin
+     git checkout dfaf24b6425584d1e87f03141e8ad74e655baa98 && \
+     cp Manual.pdf /usr/local/share/doc/basto6809.pdf && \
+     cd Binary_Versions/v5.01 && \
+     if [ "$(uname -m)" = "aarch64" ]; then \
+       unzip BASIC-To-6809_v5.01_Linux_arm64.zip -d ../../../basto6809; \
+     else \
+       unzip BASIC-To-6809_v5.01_Linux_x86_64.zip -d ../../../basto6809; \
+     fi && \
+     cd ../../.. && \
+     rm -r BASIC-To-6809 && \
+     mkdir BASIC-To-6809 && \
+     if [ "$(uname -m)" = "aarch64" ]; then \
+       cd  basto6809/BASIC-To-6809_Linux_arm64; \
+     else \
+       cd  basto6809/BASIC-To-6809_Linux_x86_64; \
+     fi && \
+     mv * ../../BASIC-To-6809 && \
+     cd ../.. && \
+     rm -r basto6809
+ADD utils/basto6809todsk /usr/local/bin
 
 # Link so things work nicely with macOS
-RUN sudo ln -s /home /Users
+RUN ln -s /home /Users
 
 # For java_grinder
 ENV CLASSPATH=/home/vscode/java_grinder/build/JavaGrinder.jar \

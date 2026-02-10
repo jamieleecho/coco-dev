@@ -22,7 +22,7 @@ cd ${tmpdir}
 
 # Do real work
 echo Compiling ${BAS_FILE} and creating ${ASM_FILE}, ${BIN_FILE} and ${DSK_FILE}
-./basto6809 "${BAS_FILE0}"
+./BasTo6809 "${BAS_FILE0}"
 lwasm  -o "${BIN_FILE}" "$ASM_FILE"
 decb dskini "${DSK_FILE}"
 decb copy "${BIN_FILE}" "${DSK_FILE},${BIN_FILE}"
