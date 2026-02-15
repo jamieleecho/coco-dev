@@ -150,13 +150,13 @@ RUN curl -LO http://sarrazip.com/dev/cmoc-0.1.97.tar.gz && \
 # Build and install BASIC-To-6809
 RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
      cd BASIC-To-6809 && \
-     git checkout dfaf24b6425584d1e87f03141e8ad74e655baa98 && \
+     git checkout a962f3f012b347be7b9f8cc030b9997d20bc1c36 && \
      cp Manual.pdf /usr/local/share/doc/basto6809.pdf && \
-     cd Binary_Versions/v5.01 && \
+     cd Binary_Versions/v5.11 && \
      if [ "$(uname -m)" = "aarch64" ]; then \
-       unzip BASIC-To-6809_v5.01_Linux_arm64.zip -d ../../../basto6809; \
+       unzip BASIC-To-6809_v5.11_Linux_arm64.zip -d ../../../basto6809; \
      else \
-       unzip BASIC-To-6809_v5.01_Linux_x86_64.zip -d ../../../basto6809; \
+       unzip BASIC-To-6809_v5.11_Linux_x86_64.zip -d ../../../basto6809; \
      fi && \
      cd ../../.. && \
      rm -r BASIC-To-6809 && \
