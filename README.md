@@ -5,7 +5,7 @@ Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 
 * CoCo Languages and Libraries
-  * [BasTo6809 V5.11](https://github.com/nowhereman999/BASIC-To-6809)
+  * [BasTo6809 V5.26](https://github.com/nowhereman999/BASIC-To-6809)
   * [CMOC 0.1.97](http://sarrazip.com/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.24](http://lwtools.projects.l-w.ca)
@@ -13,7 +13,7 @@ applications. It implements a Docker image that includes the following tools:
   * [nitros9/defs](https://github.com/nitros9project/nitros9/tree/main/defs)
 
 * CoCo Development Utilities
-  * [coco-tools 0.26](https://pypi.org/project/coco-tools/)
+  * [coco-tools 0.27](https://pypi.org/project/coco-tools/)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [preprocessor](https://github.com/yggdrasilradio/preprocessor)
@@ -22,7 +22,7 @@ applications. It implements a Docker image that includes the following tools:
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
-  * [mc10-tools 0.9](https://pypi.org/project/mc10-tools/0.9)
+  * [mc10-tools 0.10](https://pypi.org/project/mc10-tools/0.10)
   * [mcbasic](https://github.com/gregdionne/mcbasic)
   * [tasm6801](https://github.com/gregdionne/tasm6801)
 
