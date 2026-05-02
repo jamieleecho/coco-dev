@@ -1,0 +1,11 @@
+.dockerignore
+.git
+.github
+.gitignore
+Makefile
+README.md
+bump-info.json
+coco-dev
+docker-compose.build.yml
+package.json
+tests

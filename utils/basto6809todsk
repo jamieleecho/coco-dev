@@ -1,27 +1,28 @@
-#!/bin/env bash
+#!/usr/bin/env bash
+set -eu
 
 if [[ $# -ne 1 ]] ; then
-    echo $0 PROG.BAS
-    echo Compiles PROG.BAS into a binary located on PROG.DSK
+    echo "$0 PROG.BAS"
+    echo "Compiles PROG.BAS into a binary located on PROG.DSK"
     exit 0
 fi
 
 BAS_FILE="$1"
-BAS_FILE0=$(basename ${BAS_FILE})
+BAS_FILE0=$(basename "${BAS_FILE}")
 ASM_FILE="${BAS_FILE0%.BAS}.asm"
 BIN_FILE="${BAS_FILE0%.BAS}.BIN"
 DSK_FILE="${BAS_FILE0%.BAS}.DSK"
-CURRENT_DIR="`pwd`"
+CURRENT_DIR="$(pwd)"
 
 # Create a working folder
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'tmpdir')
-echo Copying compiler and source file to ${tmpdir}
-cp -R /usr/local/share/basto6809/* ${tmpdir}
-cp $1 ${tmpdir}
-cd ${tmpdir}
+echo "Copying compiler and source file to ${tmpdir}"
+cp -R /usr/local/share/basto6809/* "${tmpdir}"
+cp "$1" "${tmpdir}"
+cd "${tmpdir}"
 
 # Do real work
-echo Compiling ${BAS_FILE} and creating ${ASM_FILE}, ${BIN_FILE} and ${DSK_FILE}
+echo "Compiling ${BAS_FILE} and creating ${ASM_FILE}, ${BIN_FILE} and ${DSK_FILE}"
 ./BasTo6809 "${BAS_FILE0}"
 lwasm  -o "${BIN_FILE}" "$ASM_FILE"
 decb dskini "${DSK_FILE}"
