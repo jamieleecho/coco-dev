@@ -5,61 +5,53 @@ LABEL org.opencontainers.image.authors="Jamie Cho"
 # Setup sources
 RUN export DEBIAN_FRONTEND=noninteractive && \
   apt-get update -y && \
-  apt-get install -y curl && \
-  apt-get update -y && \
   apt-get upgrade -y && \
   apt-get install -y \
-    bc \
     bison \
     build-essential \
+    curl \
     default-jdk \
     dos2unix \
     ffmpeg \
     flex \
-    freeglut3-dev \
     fuse \
-    g++-10 \
     git \
     imagemagick \
     libcurl4-openssl-dev \
     libfuse-dev \
     libjpeg-dev \
     libmagickwand-dev \
-    libglu1-mesa-dev \
     mame-tools \
     markdown \
-    mesa-common-dev \
     p7zip \
     pipx \
     python-is-python3 \
     python3 \
     python3-dev \
     python3-tk \
-    software-properties-common \
     vim \
     zlib1g-dev && \
-  apt-get clean
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
-# Do installs as root
-USER root
 WORKDIR /root
 
 # Setup default python environment
-RUN python -m venv venv && \
-    . venv/bin/activate
+RUN python -m venv venv
 ENV VIRTUAL_ENV=/root/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install \
     coco-tools==0.27 \
     milliluk-tools==0.1 \
     mc10-tools==0.10 \
-    mypy==1.15.0 \
-    numpy==2.2.6 \
-    pillow==11.2.1 \
+    mypy==1.20.2 \
+    numpy==2.4.4 \
+    pillow==12.2.0 \
     pypng==0.20220715.0 \
-    ruff==0.14.3 \
-    uv==0.9.24 \
-    wand==0.6.13 && \
+    ruff==0.15.12 \
+    ty==0.0.34 \
+    uv==0.11.8 \
+    wand==0.7.0 && \
     chmod o+rx /root /root/venv
 
 # Install preprocessor
@@ -73,7 +65,8 @@ RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
 RUN git clone https://github.com/einar-saukas/ZX0 && \
   cd "ZX0/src" && \
   make -j CC=gcc CFLAGS=-O3 EXTENSION= && \
-  cp zx0 dzx0 /usr/local/bin
+  cp zx0 dzx0 /usr/local/bin && \
+  cd /root && rm -rf ZX0
 
 # Install salvador (fast near-optimal ZX0 compressor)
 RUN git clone https://github.com/emmanuel-marty/salvador && \
@@ -84,7 +77,7 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
   (PATH=./clang-hack:$PATH make -j) && \
   rm -r ./clang-hack && \
   cp salvador /usr/local/bin && \
-  make clean
+  cd /root && rm -rf salvador
 
 # Install lwtools
 RUN curl -O http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz && \
@@ -92,21 +85,23 @@ RUN curl -O http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz && \
   cd lwtools-4.24 && \
   make -j CC=gcc && \
   make install && \
-  make clean
+  cd /root && rm -rf lwtools-4.24 lwtools-4.24.tar.gz
 
 # Install Toolshed
 RUN git clone https://github.com/nitros9project/toolshed.git && \
   cd toolshed && \
-  git checkout v2_4_2 && \
+  git checkout v2_5 && \
   make -j -C build/unix CC=gcc && \
-  make -C build/unix install
+  make -C build/unix install && \
+  cd /root && rm -rf toolshed
 
 # Install key OS-9 defs from nitros-9
 RUN git clone https://github.com/nitros9project/nitros9.git && \
   cd nitros9 && \
   git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
   mkdir -p /usr/local/share/lwasm && \
-  cp -R defs/* /usr/local/share/lwasm/
+  cp -R defs/* /usr/local/share/lwasm/ && \
+  cd /root && rm -rf nitros9
 
 # Install java grinder
 RUN git clone https://github.com/mikeakohn/naken_asm.git && \
@@ -121,60 +116,55 @@ RUN git clone https://github.com/mikeakohn/naken_asm.git && \
   make -j && \
   make java && \
   (cd samples/trs80_coco && make -j grind) && \
-  cp java_grinder /usr/local/bin/
+  cp java_grinder /usr/local/bin/ && \
+  mkdir -p /usr/local/share/java_grinder && \
+  cp build/JavaGrinder.jar /usr/local/share/java_grinder/ && \
+  cd /root && rm -rf naken_asm java_grinder
 
 # Install tasm and mcbasic
 RUN git clone https://github.com/gregdionne/tasm6801.git && \
   git clone https://github.com/gregdionne/mcbasic.git && \
   cd tasm6801 && \
-  git checkout 0820625 && \
+  git checkout 0820625bf8e78053ced348a3d747191d54e5e24f && \
   cd src && \
   make -j && \
   cp ../tasm6801 /usr/local/bin && \
-  make clean && \
   cd ../../mcbasic && \
-  git checkout 1030ec4 && \
+  git checkout 1030ec4413df400e07709a9aabffcaaf4772eb82 && \
   make -j && \
   cp mcbasic /usr/local/bin && \
-  make clean
+  cd /root && rm -rf tasm6801 mcbasic
 
 # Install CMOC
-RUN curl -LO http://sarrazip.com/dev/cmoc-0.1.97.tar.gz && \
-  tar -zxpvf cmoc-0.1.97.tar.gz && \
-  cd cmoc-0.1.97 && \
+RUN curl -LO http://sarrazip.com/dev/cmoc-0.1.98.tar.gz && \
+  tar -zxpvf cmoc-0.1.98.tar.gz && \
+  cd cmoc-0.1.98 && \
   ./configure && \
   make && \
   make install && \
-  make clean
+  cd /root && rm -rf cmoc-0.1.98 cmoc-0.1.98.tar.gz
 
 # Build and install BASIC-To-6809
 RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
      cd BASIC-To-6809 && \
-     git checkout 9c5246b5cb9d8bb7687845dcf460418e79331bdb && \
+     git checkout 804941e50d6a7c5a209f19f212fdbd672abd8b53 && \
      cp Manual.pdf /usr/local/share/doc/basto6809.pdf && \
      cd Binary_Versions && \
      if [ "$(uname -m)" = "aarch64" ]; then \
-       unzip BASIC-To-6809_v5.26_Linux_arm64.zip -d ../../basto6809; \
+       unzip BASIC-To-6809_v5.27_Linux_arm64.zip -d /tmp/basto6809 && \
+       mv /tmp/basto6809/BASIC-To-6809_Linux_arm64 /usr/local/share/basto6809; \
      else \
-       unzip BASIC-To-6809_v5.26_Linux_x86_64.zip -d ../../basto6809; \
+       unzip BASIC-To-6809_v5.27_Linux_x86_64.zip -d /tmp/basto6809 && \
+       mv /tmp/basto6809/BASIC-To-6809_Linux_x86_64 /usr/local/share/basto6809; \
      fi && \
-     cd ../.. && \
-     rm -r BASIC-To-6809 && \
-     mkdir BASIC-To-6809 && \
-     if [ "$(uname -m)" = "aarch64" ]; then \
-       cd  basto6809/BASIC-To-6809_Linux_arm64; \
-     else \
-       cd  basto6809/BASIC-To-6809_Linux_x86_64; \
-     fi && \
-     mv * ../../BASIC-To-6809 && \
-     cd ../.. && \
-     rm -r basto6809
-ADD utils/basto6809todsk /usr/local/bin
+     chmod -R o+rx /usr/local/share/basto6809 && \
+     cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
+COPY utils/basto6809todsk /usr/local/bin
 
 # Link so things work nicely with macOS
 RUN ln -s /home /Users
 
 # For java_grinder
-ENV CLASSPATH=/home/vscode/java_grinder/build/JavaGrinder.jar \
+ENV CLASSPATH=/usr/local/share/java_grinder/JavaGrinder.jar \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
