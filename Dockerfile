@@ -14,15 +14,18 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     dos2unix \
     ffmpeg \
     flex \
+    freeglut3-dev \
     fuse \
     git \
     imagemagick \
     libcurl4-openssl-dev \
     libfuse-dev \
+    libglu1-mesa-dev \
     libjpeg-dev \
     libmagickwand-dev \
     mame-tools \
     markdown \
+    mesa-common-dev \
     p7zip \
     pipx \
     python-is-python3 \
