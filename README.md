@@ -75,5 +75,9 @@ your project folder and open the folder in VS Code. See the [documentation](http
 # Start the Docker application if it is not already running
 git clone https://github.com/jamieleecho/coco-dev.git
 cd coco-dev
-./build
+make build
 ```
+
+Run `make help` to see the available targets. After building, `make test`
+runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, and Java
+Grinder against the built image.
