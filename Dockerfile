@@ -150,16 +150,17 @@ RUN curl -LO http://sarrazip.com/dev/cmoc-0.1.98.tar.gz && \
 # Build and install BASIC-To-6809
 RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
      cd BASIC-To-6809 && \
-     git checkout 804941e50d6a7c5a209f19f212fdbd672abd8b53 && \
+     git checkout 0e60e91fae063324fb9608f0117f6e9ac0582125 && \
      cp Manual.pdf /usr/local/share/doc/basto6809.pdf && \
      cd Binary_Versions && \
      if [ "$(uname -m)" = "aarch64" ]; then \
-       unzip BASIC-To-6809_v5.27_Linux_arm64.zip -d /tmp/basto6809 && \
+       unzip BASIC-To-6809_v5.28_Linux_arm64.zip -d /tmp/basto6809 && \
        mv /tmp/basto6809/BASIC-To-6809_Linux_arm64 /usr/local/share/basto6809; \
      else \
-       unzip BASIC-To-6809_v5.27_Linux_x86_64.zip -d /tmp/basto6809 && \
+       unzip BASIC-To-6809_v5.28_Linux_x86_64.zip -d /tmp/basto6809 && \
        mv /tmp/basto6809/BASIC-To-6809_Linux_x86_64 /usr/local/share/basto6809; \
      fi && \
+     mv "/usr/local/share/basto6809/BasTo6809.2.Compile copy" "/usr/local/share/basto6809/BasTo6809.2.Compile" && \
      chmod -R o+rx /usr/local/share/basto6809 && \
      cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
 COPY utils/basto6809todsk /usr/local/bin
