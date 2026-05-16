@@ -160,6 +160,7 @@ RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
        unzip BASIC-To-6809_v5.28_Linux_x86_64.zip -d /tmp/basto6809 && \
        mv /tmp/basto6809/BASIC-To-6809_Linux_x86_64 /usr/local/share/basto6809; \
      fi && \
+     mv "/usr/local/share/basto6809/BasTo6809.2.Compile copy" "/usr/local/share/basto6809/BasTo6809.2.Compile" && \
      chmod -R o+rx /usr/local/share/basto6809 && \
      cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
 COPY utils/basto6809todsk /usr/local/bin
