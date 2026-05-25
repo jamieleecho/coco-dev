@@ -14,6 +14,7 @@ applications. It implements a Docker image that includes the following tools:
 
 * CoCo Development Utilities
   * [coco-tools 0.27](https://pypi.org/project/coco-tools/)
+  * [MAME 0.287](https://www.mamedev.org) (headless, CoCo 3-only build)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
   * [milliluk-tools](https://github.com/milliluk/milliluk-tools)
   * [preprocessor](https://github.com/yggdrasilradio/preprocessor)
@@ -69,6 +70,34 @@ coco-dev can be used as a base image for Visual Studio Code Dev Containers.
 To get started, simply copy the example `.devcontainer` folder to the root of
 your project folder and open the folder in VS Code. See the [documentation](https://code.visualstudio.com/docs/devcontainers/containers) for more information.
 
+### Running MAME headlessly
+
+The image includes a headless, CoCo 3-only build of MAME (the `mame` binary,
+in addition to the `mame-tools` utilities). It is compiled with only the
+`coco3` driver, so it boots a CoCo 3 but is much smaller than a full MAME
+build. The container sets `SDL_VIDEODRIVER=dummy` and `SDL_AUDIODRIVER=dummy`
+so MAME runs without a display or sound card.
+
+**ROMs are not included.** The CoCo 3 system ROM is copyrighted and cannot be
+distributed, so you must supply it at run time via `-rompath`. MAME expects a
+`coco3.zip` containing the CoCo 3 ROM inside the rompath directory.
+
+A typical non-interactive run that boots a disk image and exits after a fixed
+amount of emulated time looks like:
+
+```bash
+mame coco3 \
+  -rompath /path/to/roms \
+  -flop1 /path/to/nos9.dsk \
+  -flop2 /path/to/test.dsk \
+  -video none -sound none \
+  -seconds_to_run 60
+```
+
+Lua plugins and language files are installed under `/usr/local/share/mame`
+(`-pluginspath /usr/local/share/mame/plugins`) for driving MAME with
+`-autoboot_script`/`-script` automation.
+
 ## Building coco-dev
 
 ```bash
@@ -79,5 +108,19 @@ make build
 ```
 
 Run `make help` to see the available targets. After building, `make test`
-runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, and Java
-Grinder against the built image.
+runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, Java
+Grinder, and the CoCo 3 MAME build against the built image.
+
+Building MAME from source is the slow part of the image build. A few of MAME's
+core source files need ~2 GB of RAM each in the compiler, so the job count is
+deliberately conservative: it defaults to `MAME_JOBS=2` (~4 GB peak). If your
+Docker host has plenty of RAM you can speed the build up by raising it, e.g.:
+
+```bash
+docker compose -f docker-compose.build.yml build \
+  --build-arg MAME_JOBS=4
+```
+
+If the build is killed for memory, either lower it to `--build-arg MAME_JOBS=1`
+or increase the memory allotted to Docker (Docker Desktop → Settings →
+Resources).

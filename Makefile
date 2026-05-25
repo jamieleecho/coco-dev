@@ -25,24 +25,27 @@ build:
 
 test:
 	docker run --rm -v "$(CURDIR)/tests:/sources:ro" $(TAG) bash -euc '\
-		echo "[1/4] java_grinder -> .bin"; \
+		echo "[1/5] java_grinder -> .bin"; \
 		work=$$(mktemp -d); cp /sources/java_grinder/* $$work/; cd $$work; \
 		javac Hello.java; \
 		java_grinder Hello.class Hello.asm trs80_coco; \
 		naken_asm -l -type bin -o Hello.bin Hello.asm; \
 		test -s Hello.bin; \
-		echo "[2/4] basto6809todsk -> .DSK"; \
+		echo "[2/5] basto6809todsk -> .DSK"; \
 		work=$$(mktemp -d); cp /sources/basto6809/* $$work/; cd $$work; \
 		basto6809todsk HELLO.BAS; \
 		test -s HELLO.DSK; \
-		echo "[3/4] mcbasic -> .c10"; \
+		echo "[3/5] mcbasic -> .c10"; \
 		work=$$(mktemp -d); cp /sources/mcbasic/* $$work/; cd $$work; \
 		mcbasic MC10HELLO.BAS; \
 		test -s MC10HELLO.c10; \
-		echo "[4/4] cmoc --os9 -> OS-9 module"; \
+		echo "[4/5] cmoc --os9 -> OS-9 module"; \
 		work=$$(mktemp -d); cp /sources/cmoc-os9/* $$work/; cd $$work; \
 		cmoc --os9 hello.c; \
 		test -s hello; \
+		echo "[5/5] mame coco3 driver present + headless"; \
+		mame -listfull coco3 | grep -qw coco3; \
+		mame -validate coco3 >/dev/null; \
 		echo "All smoke tests passed."'
 
 shell:
