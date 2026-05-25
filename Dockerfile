@@ -19,10 +19,13 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git \
     imagemagick \
     libcurl4-openssl-dev \
+    libfontconfig1-dev \
     libfuse-dev \
     libglu1-mesa-dev \
     libjpeg-dev \
     libmagickwand-dev \
+    libsdl2-dev \
+    libsdl2-ttf-dev \
     mame-tools \
     markdown \
     mesa-common-dev \
@@ -165,6 +168,38 @@ RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
      cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
 COPY utils/basto6809todsk /usr/local/bin
 
+# Build and install a headless, CoCo 3-only MAME.
+#
+# Only the coco3.cpp driver (and its dependencies) is compiled, which keeps
+# the binary small compared to a full MAME build. The result runs headlessly
+# (no display/audio needed) via `-video none -sound none` plus the SDL dummy
+# drivers; see the README for the test-runner invocation. ROMs are NOT shipped
+# (they are copyrighted) and must be supplied at run time with `-rompath`.
+#
+# MAME's core has several very large translation units (luaengine, emumem) that
+# each need ~2GB of RAM in the compiler, so the job count is kept low to avoid
+# the OOM killer (MAME_JOBS=2 needs ~4GB). Lower it to 1 on a RAM-starved host,
+# or raise it (e.g. --build-arg MAME_JOBS=4) when there is RAM to spare.
+ARG MAME_VERSION=0287
+ARG MAME_JOBS=2
+RUN git clone --depth 1 --branch mame$MAME_VERSION \
+      https://github.com/mamedev/mame.git && \
+  cd mame && \
+  make -j"$MAME_JOBS" \
+    SUBTARGET=coco \
+    SOURCES=src/mame/trs/coco3.cpp \
+    REGENIE=1 \
+    TOOLS=0 \
+    USE_QTDEBUG=0 \
+    NO_USE_PORTAUDIO=1 \
+    PYTHON_EXECUTABLE=python3 && \
+  (install -m 0755 coco /usr/local/bin/mame 2>/dev/null || \
+   install -m 0755 mamecoco /usr/local/bin/mame) && \
+  mkdir -p /usr/local/share/mame && \
+  cp -R plugins language /usr/local/share/mame/ && \
+  chmod -R o+rx /usr/local/share/mame && \
+  cd /root && rm -rf mame
+
 # Link so things work nicely with macOS
 RUN ln -s /home /Users
 
@@ -172,3 +207,8 @@ RUN ln -s /home /Users
 ENV CLASSPATH=/usr/local/share/java_grinder/JavaGrinder.jar \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
+
+# Run MAME headlessly by default (no display/audio). Override these at run time
+# if you ever attach a real display (e.g. X forwarding).
+ENV SDL_VIDEODRIVER=dummy \
+    SDL_AUDIODRIVER=dummy
