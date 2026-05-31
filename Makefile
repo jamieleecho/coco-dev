@@ -21,7 +21,8 @@ help:
 	@echo "Override the tag with TAG=...  (e.g. make test TAG=jamieleecho/coco-dev:0.79)"
 
 build:
-	docker compose -f docker-compose.build.yml build
+	docker compose -f docker-compose.build.yml build \
+		$(if $(MAME_JOBS),--build-arg MAME_JOBS=$(MAME_JOBS))
 
 test:
 	docker run --rm -v "$(CURDIR)/tests:/sources:ro" $(TAG) bash -euc '\

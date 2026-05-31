@@ -64,6 +64,8 @@ jobs:
         with:
           load: true
           tags: jamieleecho/coco-dev:${{ env.RELEASE_TAG }}-${{ matrix.os }}
+          build-args: |
+            MAME_JOBS=4
           cache-from: type=gha,scope=${{ matrix.os }}
           cache-to: type=gha,mode=max,scope=${{ matrix.os }}
 
