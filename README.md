@@ -111,16 +111,22 @@ Run `make help` to see the available targets. After building, `make test`
 runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, Java
 Grinder, and the CoCo 3 MAME build against the built image.
 
+The image is a multi-stage build: a shared `foundation` stage (apt packages,
+the Python venv, lwtools and toolshed) followed by one stage per tool, which
+BuildKit compiles in parallel. Compile-heavy stages use a `ccache` cache mount,
+so rebuilding unchanged sources locally is fast.
+
 Building MAME from source is the slow part of the image build. A few of MAME's
 core source files need ~2 GB of RAM each in the compiler, so the job count is
 deliberately conservative: it defaults to `MAME_JOBS=2` (~4 GB peak). If your
 Docker host has plenty of RAM you can speed the build up by raising it, e.g.:
 
 ```bash
-docker compose -f docker-compose.build.yml build \
-  --build-arg MAME_JOBS=4
+make build MAME_JOBS=4
 ```
 
-If the build is killed for memory, either lower it to `--build-arg MAME_JOBS=1`
-or increase the memory allotted to Docker (Docker Desktop → Settings →
-Resources).
+Because the tool stages build concurrently, MAME's compile now overlaps with
+the other tools', so size `MAME_JOBS` against the RAM you have free *during*
+the build, not in isolation. If the build is killed for memory, lower it (down
+to `MAME_JOBS=1`) or increase the memory allotted to Docker (Docker Desktop →
+Settings → Resources).
