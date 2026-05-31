@@ -30,11 +30,13 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     curl \
     default-jdk \
     dos2unix \
+    doxygen \
     ffmpeg \
     flex \
     freeglut3-dev \
     fuse \
     git \
+    graphviz \
     imagemagick \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
