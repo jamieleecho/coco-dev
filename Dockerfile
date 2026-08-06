@@ -3,12 +3,15 @@
 # Multi-stage build.
 #
 # `foundation` holds everything shared by every later build: the apt packages,
-# the Python venv, and the two foundational toolchain pieces (lwtools and
-# toolshed) that other builds may rely on. Every remaining tool is built in its
-# own stage `FROM foundation`, so BuildKit compiles them concurrently and a
-# change to one tool no longer invalidates the others' cache. Each tool stage
-# installs into an isolated `/staging` prefix; the `final` stage assembles the
-# image with one `COPY --from=<tool> /staging/ /` per tool.
+# the Python venv, and lwtools. lwtools is the one genuine build-time
+# dependency -- CMOC's configure aborts without `lwasm` (>= 4.11). Toolshed is
+# only needed at run time, so it builds as its own parallel stage below.
+#
+# Every remaining tool is built in its own stage `FROM foundation`, so BuildKit
+# compiles them concurrently and a change to one tool no longer invalidates the
+# others' cache. Each tool stage installs into an isolated `/staging` prefix;
+# the `final` stage assembles the image with one `COPY --from=<tool> /staging/ /`
+# per tool.
 #
 # Compile-heavy stages (mame, cmoc, java_grinder, lwtools, toolshed, zx0) use a
 # ccache BuildKit cache mount, so recompiling the same source (e.g. after a
@@ -86,7 +89,7 @@ RUN pip install --no-cache-dir \
 ENV CCACHE_DIR=/root/.ccache \
     CCACHE_MAXSIZE=2G
 
-# --- Foundational toolchain (other build stages may depend on these) ---
+# --- Foundational toolchain (other build stages depend on this) ---
 
 # Install lwtools
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
@@ -97,20 +100,32 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
   make install && \
   cd /root && rm -rf lwtools-4.24 lwtools-4.24.tar.gz
 
+
+# ===========================================================================
+# Parallel tool stages. Each is independent and FROM foundation, and installs
+# into /staging (mirroring the final layout) so `final` can COPY it in.
+# ===========================================================================
+
 # Install Toolshed
+#
+# Nothing builds against this -- it is a run-time dependency of the image
+# (basto6809todsk shells out to `decb`), so it belongs here rather than in
+# foundation. Its Makefile maps DESTDIR to $(DESTDIR)/usr/bin instead of
+# /usr/local/bin, so install normally and copy the paths into /staging, the
+# same way the jgrinder stage handles naken_asm.
+FROM foundation AS toolshed
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
   git clone --depth=1 --branch v2_5 \
       https://github.com/nitros9project/toolshed.git && \
   cd toolshed && \
   make -j -C build/unix CC="ccache gcc" && \
   make -C build/unix install && \
+  mkdir -p /staging/usr/local/bin /staging/usr/local/share && \
+  for t in ar2 os9 mamou cecb decb tocgen makewav dis68 lst2cmt cocofuse; do \
+    cp "/usr/local/bin/$t" /staging/usr/local/bin/; \
+  done && \
+  cp -R /usr/local/share/toolshed /staging/usr/local/share/ && \
   cd /root && rm -rf toolshed
-
-
-# ===========================================================================
-# Parallel tool stages. Each is independent and FROM foundation, and installs
-# into /staging (mirroring the final layout) so `final` can COPY it in.
-# ===========================================================================
 
 # Install preprocessor
 FROM foundation AS preproc
@@ -294,6 +309,7 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # ===========================================================================
 FROM foundation AS final
 
+COPY --from=toolshed /staging/ /
 COPY --from=preproc  /staging/ /
 COPY --from=zx0      /staging/ /
 COPY --from=salvador /staging/ /

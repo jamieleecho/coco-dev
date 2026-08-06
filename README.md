@@ -115,9 +115,11 @@ MAME build against the built image. `make lint` runs shellcheck over the
 shell scripts and hadolint over the Dockerfile.
 
 The image is a multi-stage build: a shared `foundation` stage (apt packages,
-the Python venv, lwtools and toolshed) followed by one stage per tool, which
-BuildKit compiles in parallel. Compile-heavy stages use a `ccache` cache mount,
-so rebuilding unchanged sources locally is fast.
+the Python venv and lwtools) followed by one stage per tool, which BuildKit
+compiles in parallel. lwtools lives in `foundation` because CMOC's configure
+requires `lwasm`; every other tool, toolshed included, is only needed at run
+time and so builds as its own parallel stage. Compile-heavy stages use a
+`ccache` cache mount, so rebuilding unchanged sources locally is fast.
 
 Building MAME from source is the slow part of the image build. A few of MAME's
 core source files need ~2 GB of RAM each in the compiler, so the job count is
