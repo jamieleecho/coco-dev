@@ -228,21 +228,25 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
   cd /root && rm -rf cmoc-0.1.99 cmoc-0.1.99.tar.gz
 
 # Build and install BASIC-To-6809
+#
+# Upstream keeps every historical release binary in the tree, so even a depth-1
+# checkout is ~1.9GB. Fetch blobs lazily (--filter=blob:none) and sparse-check
+# out just the manual and this architecture's zip, which pulls ~43MB instead.
 FROM foundation AS basto
-RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
+RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
+     ZIP="BASIC-To-6809_v5.33_Linux_$ARCH.zip" && \
+     git init -q BASIC-To-6809 && \
      cd BASIC-To-6809 && \
-     git checkout 0e60e91fae063324fb9608f0117f6e9ac0582125 && \
+     git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
+     git config remote.origin.promisor true && \
+     git config remote.origin.partialclonefilter blob:none && \
+     git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
+     git fetch --depth=1 --filter=blob:none origin 1fd2f46923e61b60f54a16e5b317a633eaa43c80 && \
+     git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
      cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
-     cd Binary_Versions && \
-     if [ "$(uname -m)" = "aarch64" ]; then \
-       unzip BASIC-To-6809_v5.28_Linux_arm64.zip -d /tmp/basto6809 && \
-       mv /tmp/basto6809/BASIC-To-6809_Linux_arm64 /staging/usr/local/share/basto6809; \
-     else \
-       unzip BASIC-To-6809_v5.28_Linux_x86_64.zip -d /tmp/basto6809 && \
-       mv /tmp/basto6809/BASIC-To-6809_Linux_x86_64 /staging/usr/local/share/basto6809; \
-     fi && \
-     mv "/staging/usr/local/share/basto6809/BasTo6809.2.Compile copy" "/staging/usr/local/share/basto6809/BasTo6809.2.Compile" && \
+     unzip -q "Binary_Versions/$ZIP" -d /tmp/basto6809 && \
+     mv "/tmp/basto6809/BASIC-To-6809_Linux_$ARCH" /staging/usr/local/share/basto6809 && \
      chmod -R o+rx /staging/usr/local/share/basto6809 && \
      cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
 
