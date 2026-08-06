@@ -219,13 +219,13 @@ RUN git init -q mcbasic && \
 # Install CMOC
 FROM foundation AS cmoc
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  curl -LO http://sarrazip.com/dev/cmoc-0.1.98.tar.gz && \
-  tar -zxpvf cmoc-0.1.98.tar.gz && \
-  cd cmoc-0.1.98 && \
+  curl -LO http://sarrazip.com/dev/cmoc-0.1.99.tar.gz && \
+  tar -zxpvf cmoc-0.1.99.tar.gz && \
+  cd cmoc-0.1.99 && \
   ./configure CC="ccache gcc" CXX="ccache g++" && \
   make && \
   make install DESTDIR=/staging && \
-  cd /root && rm -rf cmoc-0.1.98 cmoc-0.1.98.tar.gz
+  cd /root && rm -rf cmoc-0.1.99 cmoc-0.1.99.tar.gz
 
 # Build and install BASIC-To-6809
 FROM foundation AS basto
