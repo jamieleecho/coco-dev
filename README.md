@@ -5,8 +5,8 @@ Color Computer](https://en.wikipedia.org/wiki/TRS-80_Color_Computer)
 applications. It implements a Docker image that includes the following tools:
 
 * CoCo Languages and Libraries
-  * [BasTo6809 V5.28](https://github.com/nowhereman999/BASIC-To-6809)
-  * [CMOC 0.1.98](http://sarrazip.com/dev/cmoc.html)
+  * [BasTo6809 V5.33](https://github.com/nowhereman999/BASIC-To-6809)
+  * [CMOC 0.1.99](http://sarrazip.com/dev/cmoc.html)
   * [Java Grinder](http://www.mikekohn.net/micro/java_grinder.php)
   * [LWTOOLS 4.24](http://lwtools.projects.l-w.ca)
   * [naken](http://www.mikekohn.net/micro/naken_asm.php)
@@ -110,12 +110,16 @@ make build
 
 Run `make help` to see the available targets. After building, `make test`
 runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, Java
-Grinder, and the CoCo 3 MAME build against the built image.
+Grinder, tasm6801, ZX0/salvador, decbpp, the nitros9 defs, and the CoCo 3
+MAME build against the built image. `make lint` runs shellcheck over the
+shell scripts and hadolint over the Dockerfile.
 
 The image is a multi-stage build: a shared `foundation` stage (apt packages,
-the Python venv, lwtools and toolshed) followed by one stage per tool, which
-BuildKit compiles in parallel. Compile-heavy stages use a `ccache` cache mount,
-so rebuilding unchanged sources locally is fast.
+the Python venv and lwtools) followed by one stage per tool, which BuildKit
+compiles in parallel. lwtools lives in `foundation` because CMOC's configure
+requires `lwasm`; every other tool, toolshed included, is only needed at run
+time and so builds as its own parallel stage. Compile-heavy stages use a
+`ccache` cache mount, so rebuilding unchanged sources locally is fast.
 
 Building MAME from source is the slow part of the image build. A few of MAME's
 core source files need ~2 GB of RAM each in the compiler, so the job count is

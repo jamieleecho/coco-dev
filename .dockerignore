@@ -2,6 +2,7 @@
 .git
 .github
 .gitignore
+.hadolint.yaml
 Makefile
 README.md
 bump-info.json

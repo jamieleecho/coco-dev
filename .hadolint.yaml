@@ -1,0 +1,28 @@
+# hadolint configuration for the coco-dev image.
+#
+# Every ignore below is deliberate; please justify any addition here rather
+# than sprinkling inline `# hadolint ignore=` pragmas through the Dockerfile.
+ignored:
+  # "Use WORKDIR to switch to a directory".
+  #
+  # Each tool stage is a single RUN that clones, builds, installs into
+  # /staging, and deletes its source tree. The `cd`s are scoped to that one
+  # layer on purpose -- switching to WORKDIR would leak the directories into
+  # the image as persistent state and split each stage across several layers,
+  # which is exactly what the multi-stage refactor set out to avoid.
+  - DL3003
+
+  # "Pin versions in apt-get install".
+  #
+  # This is a devcontainer that intentionally tracks whatever Ubuntu 24.04
+  # ships. Pinning ~40 apt versions would break on every upstream point
+  # release. The reproducibility that matters here -- the 6809 toolchain -- is
+  # pinned by git SHA and tarball version instead.
+  - DL3008
+
+  # "Avoid additional packages by specifying --no-install-recommends".
+  #
+  # Not yet measured. Several of the packages below (default-jdk, the SDL and
+  # Mesa dev packages) can pull needed runtime libraries in via recommends, so
+  # this needs a build plus `make test` on both arches to adopt safely.
+  - DL3015

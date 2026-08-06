@@ -3,12 +3,15 @@
 # Multi-stage build.
 #
 # `foundation` holds everything shared by every later build: the apt packages,
-# the Python venv, and the two foundational toolchain pieces (lwtools and
-# toolshed) that other builds may rely on. Every remaining tool is built in its
-# own stage `FROM foundation`, so BuildKit compiles them concurrently and a
-# change to one tool no longer invalidates the others' cache. Each tool stage
-# installs into an isolated `/staging` prefix; the `final` stage assembles the
-# image with one `COPY --from=<tool> /staging/ /` per tool.
+# the Python venv, and lwtools. lwtools is the one genuine build-time
+# dependency -- CMOC's configure aborts without `lwasm` (>= 4.11). Toolshed is
+# only needed at run time, so it builds as its own parallel stage below.
+#
+# Every remaining tool is built in its own stage `FROM foundation`, so BuildKit
+# compiles them concurrently and a change to one tool no longer invalidates the
+# others' cache. Each tool stage installs into an isolated `/staging` prefix;
+# the `final` stage assembles the image with one `COPY --from=<tool> /staging/ /`
+# per tool.
 #
 # Compile-heavy stages (mame, cmoc, java_grinder, lwtools, toolshed, zx0) use a
 # ccache BuildKit cache mount, so recompiling the same source (e.g. after a
@@ -66,7 +69,7 @@ WORKDIR /root
 RUN python -m venv venv
 ENV VIRTUAL_ENV=/root/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install \
+RUN pip install --no-cache-dir \
     coco-tools==0.27 \
     milliluk-tools==0.1 \
     mc10-tools==0.10 \
@@ -86,7 +89,7 @@ RUN pip install \
 ENV CCACHE_DIR=/root/.ccache \
     CCACHE_MAXSIZE=2G
 
-# --- Foundational toolchain (other build stages may depend on these) ---
+# --- Foundational toolchain (other build stages depend on this) ---
 
 # Install lwtools
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
@@ -97,35 +100,53 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
   make install && \
   cd /root && rm -rf lwtools-4.24 lwtools-4.24.tar.gz
 
-# Install Toolshed
-RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/nitros9project/toolshed.git && \
-  cd toolshed && \
-  git checkout v2_5 && \
-  make -j -C build/unix CC="ccache gcc" && \
-  make -C build/unix install && \
-  cd /root && rm -rf toolshed
-
 
 # ===========================================================================
 # Parallel tool stages. Each is independent and FROM foundation, and installs
 # into /staging (mirroring the final layout) so `final` can COPY it in.
 # ===========================================================================
 
+# Install Toolshed
+#
+# Nothing builds against this -- it is a run-time dependency of the image
+# (basto6809todsk shells out to `decb`), so it belongs here rather than in
+# foundation. Its Makefile maps DESTDIR to $(DESTDIR)/usr/bin instead of
+# /usr/local/bin, so install normally and copy the paths into /staging, the
+# same way the jgrinder stage handles naken_asm.
+FROM foundation AS toolshed
+RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
+  git clone --depth=1 --branch v2_5 \
+      https://github.com/nitros9project/toolshed.git && \
+  cd toolshed && \
+  make -j -C build/unix CC="ccache gcc" && \
+  make -C build/unix install && \
+  mkdir -p /staging/usr/local/bin /staging/usr/local/share && \
+  for t in ar2 os9 mamou cecb decb tocgen makewav dis68 lst2cmt cocofuse; do \
+    cp "/usr/local/bin/$t" /staging/usr/local/bin/; \
+  done && \
+  cp -R /usr/local/share/toolshed /staging/usr/local/share/ && \
+  cd /root && rm -rf toolshed
+
 # Install preprocessor
 FROM foundation AS preproc
-RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
+RUN git init -q preprocessor && \
   (cd preprocessor && \
-   git checkout 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   git remote add origin https://github.com/yggdrasilradio/preprocessor.git && \
+   git fetch --depth=1 origin 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   git checkout -q FETCH_HEAD && \
    mkdir -p /staging/usr/local/bin && \
    cp decbpp /staging/usr/local/bin/) && \
-  (yes | rm -r preprocessor)
+  rm -rf preprocessor
 
 # Install ZX0 data compressor
 FROM foundation AS zx0
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/einar-saukas/ZX0 && \
-  cd "ZX0/src" && \
+  git init -q ZX0 && \
+  cd ZX0 && \
+  git remote add origin https://github.com/einar-saukas/ZX0 && \
+  git fetch --depth=1 origin ecde3a2ae05061fe06469ed46df81a33b7de7d86 && \
+  git checkout -q FETCH_HEAD && \
+  cd src && \
   make -j CC="ccache gcc" CFLAGS=-O3 EXTENSION= && \
   mkdir -p /staging/usr/local/bin && \
   cp zx0 dzx0 /staging/usr/local/bin && \
@@ -133,9 +154,11 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install salvador (fast near-optimal ZX0 compressor)
 FROM foundation AS salvador
-RUN git clone https://github.com/emmanuel-marty/salvador && \
+RUN git init -q salvador && \
   cd salvador && \
-  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  git remote add origin https://github.com/emmanuel-marty/salvador && \
+  git fetch --depth=1 origin 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  git checkout -q FETCH_HEAD && \
   mkdir clang-hack && \
   ln -s /usr/bin/cc clang-hack/clang && \
   (PATH=./clang-hack:$PATH make -j) && \
@@ -146,9 +169,11 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
 
 # Install key OS-9 defs from nitros-9
 FROM foundation AS nitros9
-RUN git clone https://github.com/nitros9project/nitros9.git && \
+RUN git init -q nitros9 && \
   cd nitros9 && \
-  git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  git remote add origin https://github.com/nitros9project/nitros9.git && \
+  git fetch --depth=1 origin 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  git checkout -q FETCH_HEAD && \
   mkdir -p /staging/usr/local/share/lwasm && \
   cp -R defs/* /staging/usr/local/share/lwasm/ && \
   cd /root && rm -rf nitros9
@@ -156,15 +181,21 @@ RUN git clone https://github.com/nitros9project/nitros9.git && \
 # Install java grinder (and naken_asm, which builds it and runs the tests)
 FROM foundation AS jgrinder
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/mikeakohn/naken_asm.git && \
-  git clone https://github.com/mikeakohn/java_grinder && \
+  git init -q naken_asm && \
+  (cd naken_asm && \
+   git remote add origin https://github.com/mikeakohn/naken_asm.git && \
+   git fetch --depth=1 origin b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
+   git checkout -q FETCH_HEAD) && \
+  git init -q java_grinder && \
+  (cd java_grinder && \
+   git remote add origin https://github.com/mikeakohn/java_grinder && \
+   git fetch --depth=1 origin 4dca222bae458766c320f045c015754aa6c17376 && \
+   git checkout -q FETCH_HEAD) && \
   cd naken_asm && \
-  git checkout b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
   ./configure && \
   make CC="ccache gcc" && \
   make install && \
   cd ../java_grinder && \
-  git checkout 4dca222bae458766c320f045c015754aa6c17376 && \
   make -j CC="ccache gcc" CXX="ccache g++" && \
   make java && \
   (cd samples/trs80_coco && make -j grind) && \
@@ -177,9 +208,11 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install tasm6801
 FROM foundation AS tasm
-RUN git clone https://github.com/gregdionne/tasm6801.git && \
+RUN git init -q tasm6801 && \
   cd tasm6801 && \
-  git checkout 0820625bf8e78053ced348a3d747191d54e5e24f && \
+  git remote add origin https://github.com/gregdionne/tasm6801.git && \
+  git fetch --depth=1 origin 0820625bf8e78053ced348a3d747191d54e5e24f && \
+  git checkout -q FETCH_HEAD && \
   cd src && \
   make -j && \
   mkdir -p /staging/usr/local/bin && \
@@ -188,9 +221,11 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
 
 # Install mcbasic
 FROM foundation AS mcbasic
-RUN git clone https://github.com/gregdionne/mcbasic.git && \
+RUN git init -q mcbasic && \
   cd mcbasic && \
-  git checkout 1030ec4413df400e07709a9aabffcaaf4772eb82 && \
+  git remote add origin https://github.com/gregdionne/mcbasic.git && \
+  git fetch --depth=1 origin 1030ec4413df400e07709a9aabffcaaf4772eb82 && \
+  git checkout -q FETCH_HEAD && \
   make -j && \
   mkdir -p /staging/usr/local/bin && \
   cp mcbasic /staging/usr/local/bin && \
@@ -199,30 +234,34 @@ RUN git clone https://github.com/gregdionne/mcbasic.git && \
 # Install CMOC
 FROM foundation AS cmoc
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  curl -LO http://sarrazip.com/dev/cmoc-0.1.98.tar.gz && \
-  tar -zxpvf cmoc-0.1.98.tar.gz && \
-  cd cmoc-0.1.98 && \
+  curl -LO http://sarrazip.com/dev/cmoc-0.1.99.tar.gz && \
+  tar -zxpvf cmoc-0.1.99.tar.gz && \
+  cd cmoc-0.1.99 && \
   ./configure CC="ccache gcc" CXX="ccache g++" && \
   make && \
   make install DESTDIR=/staging && \
-  cd /root && rm -rf cmoc-0.1.98 cmoc-0.1.98.tar.gz
+  cd /root && rm -rf cmoc-0.1.99 cmoc-0.1.99.tar.gz
 
 # Build and install BASIC-To-6809
+#
+# Upstream keeps every historical release binary in the tree, so even a depth-1
+# checkout is ~1.9GB. Fetch blobs lazily (--filter=blob:none) and sparse-check
+# out just the manual and this architecture's zip, which pulls ~43MB instead.
 FROM foundation AS basto
-RUN git clone https://github.com/nowhereman999/BASIC-To-6809.git && \
+RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
+     ZIP="BASIC-To-6809_v5.33_Linux_$ARCH.zip" && \
+     git init -q BASIC-To-6809 && \
      cd BASIC-To-6809 && \
-     git checkout 0e60e91fae063324fb9608f0117f6e9ac0582125 && \
+     git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
+     git config remote.origin.promisor true && \
+     git config remote.origin.partialclonefilter blob:none && \
+     git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
+     git fetch --depth=1 --filter=blob:none origin 1fd2f46923e61b60f54a16e5b317a633eaa43c80 && \
+     git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
      cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
-     cd Binary_Versions && \
-     if [ "$(uname -m)" = "aarch64" ]; then \
-       unzip BASIC-To-6809_v5.28_Linux_arm64.zip -d /tmp/basto6809 && \
-       mv /tmp/basto6809/BASIC-To-6809_Linux_arm64 /staging/usr/local/share/basto6809; \
-     else \
-       unzip BASIC-To-6809_v5.28_Linux_x86_64.zip -d /tmp/basto6809 && \
-       mv /tmp/basto6809/BASIC-To-6809_Linux_x86_64 /staging/usr/local/share/basto6809; \
-     fi && \
-     mv "/staging/usr/local/share/basto6809/BasTo6809.2.Compile copy" "/staging/usr/local/share/basto6809/BasTo6809.2.Compile" && \
+     unzip -q "Binary_Versions/$ZIP" -d /tmp/basto6809 && \
+     mv "/tmp/basto6809/BASIC-To-6809_Linux_$ARCH" /staging/usr/local/share/basto6809 && \
      chmod -R o+rx /staging/usr/local/share/basto6809 && \
      cd /root && rm -rf BASIC-To-6809 /tmp/basto6809
 
@@ -270,6 +309,7 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # ===========================================================================
 FROM foundation AS final
 
+COPY --from=toolshed /staging/ /
 COPY --from=preproc  /staging/ /
 COPY --from=zx0      /staging/ /
 COPY --from=salvador /staging/ /
