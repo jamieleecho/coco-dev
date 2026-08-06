@@ -111,7 +111,8 @@ make build
 Run `make help` to see the available targets. After building, `make test`
 runs a quick smoke test that exercises CMOC, BasTo6809, mcbasic, Java
 Grinder, tasm6801, ZX0/salvador, decbpp, the nitros9 defs, and the CoCo 3
-MAME build against the built image.
+MAME build against the built image. `make lint` runs shellcheck over the
+shell scripts and hadolint over the Dockerfile.
 
 The image is a multi-stage build: a shared `foundation` stage (apt packages,
 the Python venv, lwtools and toolshed) followed by one stage per tool, which

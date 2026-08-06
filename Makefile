@@ -5,6 +5,7 @@ IMAGE := jamieleecho/coco-dev
 VERSION := $(shell sed -nE 's/.*"version" *: *"([^"]+)".*/\1/p' package.json)
 TAG ?= $(IMAGE):$(VERSION)
 SHELLCHECK_IMAGE := koalaman/shellcheck-alpine:stable
+HADOLINT_IMAGE := hadolint/hadolint:v2.15.1-alpine
 
 help:
 	@echo "coco-dev Makefile targets:"
@@ -12,7 +13,7 @@ help:
 	@echo "  make build  Build the docker image and tag as $(TAG)"
 	@echo "  make test   Run smoke tests inside the built image"
 	@echo "  make shell  Drop into a one-off bash shell in the image"
-	@echo "  make lint   Run shellcheck on the shell scripts"
+	@echo "  make lint   Run shellcheck on the shell scripts + hadolint on the Dockerfile"
 	@echo "  make size   Print the size of the built image"
 	@echo "  make push   Push the image to Docker Hub"
 	@echo "  make clean  Remove the local image"
@@ -76,6 +77,8 @@ shell:
 lint:
 	docker run --rm -v "$(CURDIR):/work" -w /work $(SHELLCHECK_IMAGE) \
 		shellcheck coco-dev utils/basto6809todsk
+	docker run --rm -v "$(CURDIR):/work" -w /work $(HADOLINT_IMAGE) \
+		hadolint Dockerfile
 
 size:
 	@bytes=$$(docker image inspect --format='{{.Size}}' $(TAG)); \

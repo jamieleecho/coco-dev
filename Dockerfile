@@ -66,7 +66,7 @@ WORKDIR /root
 RUN python -m venv venv
 ENV VIRTUAL_ENV=/root/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN pip install \
+RUN pip install --no-cache-dir \
     coco-tools==0.27 \
     milliluk-tools==0.1 \
     mc10-tools==0.10 \
