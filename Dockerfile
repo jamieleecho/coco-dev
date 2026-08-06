@@ -99,9 +99,9 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install Toolshed
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/nitros9project/toolshed.git && \
+  git clone --depth=1 --branch v2_5 \
+      https://github.com/nitros9project/toolshed.git && \
   cd toolshed && \
-  git checkout v2_5 && \
   make -j -C build/unix CC="ccache gcc" && \
   make -C build/unix install && \
   cd /root && rm -rf toolshed
@@ -114,18 +114,24 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install preprocessor
 FROM foundation AS preproc
-RUN git clone https://github.com/yggdrasilradio/preprocessor.git && \
+RUN git init -q preprocessor && \
   (cd preprocessor && \
-   git checkout 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   git remote add origin https://github.com/yggdrasilradio/preprocessor.git && \
+   git fetch --depth=1 origin 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   git checkout -q FETCH_HEAD && \
    mkdir -p /staging/usr/local/bin && \
    cp decbpp /staging/usr/local/bin/) && \
-  (yes | rm -r preprocessor)
+  rm -rf preprocessor
 
 # Install ZX0 data compressor
 FROM foundation AS zx0
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/einar-saukas/ZX0 && \
-  cd "ZX0/src" && \
+  git init -q ZX0 && \
+  cd ZX0 && \
+  git remote add origin https://github.com/einar-saukas/ZX0 && \
+  git fetch --depth=1 origin ecde3a2ae05061fe06469ed46df81a33b7de7d86 && \
+  git checkout -q FETCH_HEAD && \
+  cd src && \
   make -j CC="ccache gcc" CFLAGS=-O3 EXTENSION= && \
   mkdir -p /staging/usr/local/bin && \
   cp zx0 dzx0 /staging/usr/local/bin && \
@@ -133,9 +139,11 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install salvador (fast near-optimal ZX0 compressor)
 FROM foundation AS salvador
-RUN git clone https://github.com/emmanuel-marty/salvador && \
+RUN git init -q salvador && \
   cd salvador && \
-  git checkout 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  git remote add origin https://github.com/emmanuel-marty/salvador && \
+  git fetch --depth=1 origin 1662b625a8dcd6f3f7e3491c88840611776533f5 && \
+  git checkout -q FETCH_HEAD && \
   mkdir clang-hack && \
   ln -s /usr/bin/cc clang-hack/clang && \
   (PATH=./clang-hack:$PATH make -j) && \
@@ -146,9 +154,11 @@ RUN git clone https://github.com/emmanuel-marty/salvador && \
 
 # Install key OS-9 defs from nitros-9
 FROM foundation AS nitros9
-RUN git clone https://github.com/nitros9project/nitros9.git && \
+RUN git init -q nitros9 && \
   cd nitros9 && \
-  git checkout 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  git remote add origin https://github.com/nitros9project/nitros9.git && \
+  git fetch --depth=1 origin 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  git checkout -q FETCH_HEAD && \
   mkdir -p /staging/usr/local/share/lwasm && \
   cp -R defs/* /staging/usr/local/share/lwasm/ && \
   cd /root && rm -rf nitros9
@@ -156,15 +166,21 @@ RUN git clone https://github.com/nitros9project/nitros9.git && \
 # Install java grinder (and naken_asm, which builds it and runs the tests)
 FROM foundation AS jgrinder
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone https://github.com/mikeakohn/naken_asm.git && \
-  git clone https://github.com/mikeakohn/java_grinder && \
+  git init -q naken_asm && \
+  (cd naken_asm && \
+   git remote add origin https://github.com/mikeakohn/naken_asm.git && \
+   git fetch --depth=1 origin b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
+   git checkout -q FETCH_HEAD) && \
+  git init -q java_grinder && \
+  (cd java_grinder && \
+   git remote add origin https://github.com/mikeakohn/java_grinder && \
+   git fetch --depth=1 origin 4dca222bae458766c320f045c015754aa6c17376 && \
+   git checkout -q FETCH_HEAD) && \
   cd naken_asm && \
-  git checkout b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
   ./configure && \
   make CC="ccache gcc" && \
   make install && \
   cd ../java_grinder && \
-  git checkout 4dca222bae458766c320f045c015754aa6c17376 && \
   make -j CC="ccache gcc" CXX="ccache g++" && \
   make java && \
   (cd samples/trs80_coco && make -j grind) && \
@@ -177,9 +193,11 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 
 # Install tasm6801
 FROM foundation AS tasm
-RUN git clone https://github.com/gregdionne/tasm6801.git && \
+RUN git init -q tasm6801 && \
   cd tasm6801 && \
-  git checkout 0820625bf8e78053ced348a3d747191d54e5e24f && \
+  git remote add origin https://github.com/gregdionne/tasm6801.git && \
+  git fetch --depth=1 origin 0820625bf8e78053ced348a3d747191d54e5e24f && \
+  git checkout -q FETCH_HEAD && \
   cd src && \
   make -j && \
   mkdir -p /staging/usr/local/bin && \
@@ -188,9 +206,11 @@ RUN git clone https://github.com/gregdionne/tasm6801.git && \
 
 # Install mcbasic
 FROM foundation AS mcbasic
-RUN git clone https://github.com/gregdionne/mcbasic.git && \
+RUN git init -q mcbasic && \
   cd mcbasic && \
-  git checkout 1030ec4413df400e07709a9aabffcaaf4772eb82 && \
+  git remote add origin https://github.com/gregdionne/mcbasic.git && \
+  git fetch --depth=1 origin 1030ec4413df400e07709a9aabffcaaf4772eb82 && \
+  git checkout -q FETCH_HEAD && \
   make -j && \
   mkdir -p /staging/usr/local/bin && \
   cp mcbasic /staging/usr/local/bin && \
