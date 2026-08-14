@@ -110,21 +110,16 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 #
 # Nothing builds against this -- it is a run-time dependency of the image
 # (basto6809todsk shells out to `decb`), so it belongs here rather than in
-# foundation. Its Makefile maps DESTDIR to $(DESTDIR)/usr/bin instead of
-# /usr/local/bin, so install normally and copy the paths into /staging, the
-# same way the jgrinder stage handles naken_asm.
+# foundation. As of v2.6.0 the Makefile honours a standard DESTDIR over a
+# /usr/local prefix, so it installs straight into /staging; earlier releases
+# hardcoded $(DESTDIR)/usr/bin and needed the binaries copied in by hand.
 FROM foundation AS toolshed
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone --depth=1 --branch v2_5 \
+  git clone --depth=1 --branch v2.6.0 \
       https://github.com/nitros9project/toolshed.git && \
   cd toolshed && \
   make -j -C build/unix CC="ccache gcc" && \
-  make -C build/unix install && \
-  mkdir -p /staging/usr/local/bin /staging/usr/local/share && \
-  for t in ar2 os9 mamou cecb decb tocgen makewav dis68 lst2cmt cocofuse; do \
-    cp "/usr/local/bin/$t" /staging/usr/local/bin/; \
-  done && \
-  cp -R /usr/local/share/toolshed /staging/usr/local/share/ && \
+  make -C build/unix CC="ccache gcc" install DESTDIR=/staging && \
   cd /root && rm -rf toolshed
 
 # Install preprocessor
@@ -249,14 +244,14 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # out just the manual and this architecture's zip, which pulls ~43MB instead.
 FROM foundation AS basto
 RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
-     ZIP="BASIC-To-6809_v5.33_Linux_$ARCH.zip" && \
+     ZIP="BASIC-To-6809_v5.35_Linux_$ARCH.zip" && \
      git init -q BASIC-To-6809 && \
      cd BASIC-To-6809 && \
      git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
      git config remote.origin.promisor true && \
      git config remote.origin.partialclonefilter blob:none && \
      git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
-     git fetch --depth=1 --filter=blob:none origin 1fd2f46923e61b60f54a16e5b317a633eaa43c80 && \
+     git fetch --depth=1 --filter=blob:none origin 1a843504f1ab520770aceae05d4ff4fe82edac32 && \
      git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
      cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
