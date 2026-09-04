@@ -244,14 +244,14 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # out just the manual and this architecture's zip, which pulls ~43MB instead.
 FROM foundation AS basto
 RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
-     ZIP="BASIC-To-6809_v5.35_Linux_$ARCH.zip" && \
+     ZIP="BASIC-To-6809_v5.46_Linux_$ARCH.zip" && \
      git init -q BASIC-To-6809 && \
      cd BASIC-To-6809 && \
      git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
      git config remote.origin.promisor true && \
      git config remote.origin.partialclonefilter blob:none && \
      git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
-     git fetch --depth=1 --filter=blob:none origin 1a843504f1ab520770aceae05d4ff4fe82edac32 && \
+     git fetch --depth=1 --filter=blob:none origin fe1b3d9d888e2ff511b6075c4283fa23ad61ffd9 && \
      git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
      cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
