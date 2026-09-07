@@ -229,13 +229,13 @@ RUN git init -q mcbasic && \
 # Install CMOC
 FROM foundation AS cmoc
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  curl -LO http://sarrazip.com/dev/cmoc-0.1.99.tar.gz && \
-  tar -zxpvf cmoc-0.1.99.tar.gz && \
-  cd cmoc-0.1.99 && \
+  curl -LO http://sarrazip.com/dev/cmoc-0.1.100.tar.gz && \
+  tar -zxpvf cmoc-0.1.100.tar.gz && \
+  cd cmoc-0.1.100 && \
   ./configure CC="ccache gcc" CXX="ccache g++" && \
   make && \
   make install DESTDIR=/staging && \
-  cd /root && rm -rf cmoc-0.1.99 cmoc-0.1.99.tar.gz
+  cd /root && rm -rf cmoc-0.1.100 cmoc-0.1.100.tar.gz
 
 # Build and install BASIC-To-6809
 #
@@ -250,11 +250,11 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
      git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
      git config remote.origin.promisor true && \
      git config remote.origin.partialclonefilter blob:none && \
-     git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
+     git sparse-checkout set --no-cone /BasTo6809_User_Manual.pdf "/Binary_Versions/$ZIP" && \
      git fetch --depth=1 --filter=blob:none origin 3747a693b70deeac03acd89cf02c5e6b38b63ef3 && \
      git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
-     cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
+     cp BasTo6809_User_Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
      unzip -q "Binary_Versions/$ZIP" -d /tmp/basto6809 && \
      mv "/tmp/basto6809/BASIC-To-6809_Linux_$ARCH" /staging/usr/local/share/basto6809 && \
      chmod -R o+rx /staging/usr/local/share/basto6809 && \
