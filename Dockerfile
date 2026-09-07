@@ -72,7 +72,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install --no-cache-dir \
     coco-tools==0.27 \
     milliluk-tools==0.1 \
-    mc10-tools==0.10 \
+    mc10-tools==0.11 \
     mypy==1.20.2 \
     numpy==2.4.4 \
     pillow==12.2.0 \
@@ -229,13 +229,13 @@ RUN git init -q mcbasic && \
 # Install CMOC
 FROM foundation AS cmoc
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  curl -LO http://sarrazip.com/dev/cmoc-0.1.99.tar.gz && \
-  tar -zxpvf cmoc-0.1.99.tar.gz && \
-  cd cmoc-0.1.99 && \
+  curl -LO http://sarrazip.com/dev/cmoc-0.1.100.tar.gz && \
+  tar -zxpvf cmoc-0.1.100.tar.gz && \
+  cd cmoc-0.1.100 && \
   ./configure CC="ccache gcc" CXX="ccache g++" && \
   make && \
   make install DESTDIR=/staging && \
-  cd /root && rm -rf cmoc-0.1.99 cmoc-0.1.99.tar.gz
+  cd /root && rm -rf cmoc-0.1.100 cmoc-0.1.100.tar.gz
 
 # Build and install BASIC-To-6809
 #
@@ -244,17 +244,17 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # out just the manual and this architecture's zip, which pulls ~43MB instead.
 FROM foundation AS basto
 RUN if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; else ARCH=x86_64; fi && \
-     ZIP="BASIC-To-6809_v5.46_Linux_$ARCH.zip" && \
+     ZIP="BASIC-To-6809_v5.50_Linux_$ARCH.zip" && \
      git init -q BASIC-To-6809 && \
      cd BASIC-To-6809 && \
      git remote add origin https://github.com/nowhereman999/BASIC-To-6809.git && \
      git config remote.origin.promisor true && \
      git config remote.origin.partialclonefilter blob:none && \
-     git sparse-checkout set --no-cone /Manual.pdf "/Binary_Versions/$ZIP" && \
-     git fetch --depth=1 --filter=blob:none origin fe1b3d9d888e2ff511b6075c4283fa23ad61ffd9 && \
+     git sparse-checkout set --no-cone /BasTo6809_User_Manual.pdf "/Binary_Versions/$ZIP" && \
+     git fetch --depth=1 --filter=blob:none origin 3747a693b70deeac03acd89cf02c5e6b38b63ef3 && \
      git checkout -q FETCH_HEAD && \
      mkdir -p /staging/usr/local/share/doc && \
-     cp Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
+     cp BasTo6809_User_Manual.pdf /staging/usr/local/share/doc/basto6809.pdf && \
      unzip -q "Binary_Versions/$ZIP" -d /tmp/basto6809 && \
      mv "/tmp/basto6809/BASIC-To-6809_Linux_$ARCH" /staging/usr/local/share/basto6809 && \
      chmod -R o+rx /staging/usr/local/share/basto6809 && \
