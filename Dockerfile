@@ -73,14 +73,13 @@ RUN pip install --no-cache-dir \
     coco-tools==0.27 \
     milliluk-tools==0.1 \
     mc10-tools==0.11 \
-    mypy==1.20.2 \
-    numpy==2.4.4 \
-    pillow==12.2.0 \
+    numpy==2.5.3 \
+    pillow==12.3.0 \
     pypng==0.20220715.0 \
-    ruff==0.15.12 \
-    ty==0.0.34 \
-    uv==0.11.8 \
-    wand==0.7.0 && \
+    ruff==0.16.8 \
+    ty==0.0.82 \
+    uv==0.12.17 \
+    wand==0.7.2 && \
     chmod o+rx /root /root/venv
 
 # Shared ccache directory for the compile-heavy stages below. The cache lives
@@ -93,12 +92,12 @@ ENV CCACHE_DIR=/root/.ccache \
 
 # Install lwtools
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  curl -O http://www.lwtools.ca/releases/lwtools/lwtools-4.24.tar.gz && \
-  tar -zxpvf lwtools-4.24.tar.gz && \
-  cd lwtools-4.24 && \
+  curl -O http://www.lwtools.ca/releases/lwtools/lwtools-4.25.tar.gz && \
+  tar -zxpvf lwtools-4.25.tar.gz && \
+  cd lwtools-4.25 && \
   make -j CC="ccache gcc" && \
   make install && \
-  cd /root && rm -rf lwtools-4.24 lwtools-4.24.tar.gz
+  cd /root && rm -rf lwtools-4.25 lwtools-4.25.tar.gz
 
 
 # ===========================================================================
@@ -115,7 +114,7 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
 # hardcoded $(DESTDIR)/usr/bin and needed the binaries copied in by hand.
 FROM foundation AS toolshed
 RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
-  git clone --depth=1 --branch v2.6.0 \
+  git clone --depth=1 --branch v2.6.1 \
       https://github.com/nitros9project/toolshed.git && \
   cd toolshed && \
   make -j -C build/unix CC="ccache gcc" && \
@@ -127,7 +126,7 @@ FROM foundation AS preproc
 RUN git init -q preprocessor && \
   (cd preprocessor && \
    git remote add origin https://github.com/yggdrasilradio/preprocessor.git && \
-   git fetch --depth=1 origin 62c4ace79eeffa48817f429363816d79abea77c3 && \
+   git fetch --depth=1 origin 97b7988aaa37dd0baeec3f77a154d5d531711d9f && \
    git checkout -q FETCH_HEAD && \
    mkdir -p /staging/usr/local/bin && \
    cp decbpp /staging/usr/local/bin/) && \
@@ -167,7 +166,7 @@ FROM foundation AS nitros9
 RUN git init -q nitros9 && \
   cd nitros9 && \
   git remote add origin https://github.com/nitros9project/nitros9.git && \
-  git fetch --depth=1 origin 27c67d5c445db631abfd5b45d49870364d9eacb6 && \
+  git fetch --depth=1 origin 24f3d77f7e7ff05131929efbf098aabc9b8dec08 && \
   git checkout -q FETCH_HEAD && \
   mkdir -p /staging/usr/local/share/lwasm && \
   cp -R defs/* /staging/usr/local/share/lwasm/ && \
@@ -179,12 +178,12 @@ RUN --mount=type=cache,target=/root/.ccache,sharing=shared \
   git init -q naken_asm && \
   (cd naken_asm && \
    git remote add origin https://github.com/mikeakohn/naken_asm.git && \
-   git fetch --depth=1 origin b6e83f1976a5fa0b1a371bd4d6db935a386b95ef && \
+   git fetch --depth=1 origin 247c23706909f09bac77c587780b8a826bbda27c && \
    git checkout -q FETCH_HEAD) && \
   git init -q java_grinder && \
   (cd java_grinder && \
    git remote add origin https://github.com/mikeakohn/java_grinder && \
-   git fetch --depth=1 origin 4dca222bae458766c320f045c015754aa6c17376 && \
+   git fetch --depth=1 origin 63e20803059e8444ce3ae75da4726b16d23add88 && \
    git checkout -q FETCH_HEAD) && \
   cd naken_asm && \
   ./configure && \
