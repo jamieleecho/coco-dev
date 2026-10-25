@@ -70,9 +70,9 @@ RUN python -m venv venv
 ENV VIRTUAL_ENV=/root/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install --no-cache-dir \
-    coco-tools==0.28 \
+    coco-tools==0.29 \
     milliluk-tools==0.1 \
-    mc10-tools==0.11 \
+    mc10-tools==0.12 \
     numpy==2.5.3 \
     pillow==12.3.0 \
     pypng==0.20220715.0 \

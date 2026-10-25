@@ -13,7 +13,7 @@ applications. It implements a Docker image that includes the following tools:
   * [nitros9/defs](https://github.com/nitros9project/nitros9/tree/main/defs)
 
 * CoCo Development Utilities
-  * [coco-tools 0.28](https://pypi.org/project/coco-tools/)
+  * [coco-tools 0.29](https://pypi.org/project/coco-tools/)
   * [Doxygen](https://www.doxygen.nl) (with [Graphviz](https://graphviz.org) for diagrams; HTML output)
   * [MAME 0.287](https://www.mamedev.org) (headless, CoCo 3-only build)
   * [MAME Tools](https://packages.ubuntu.com/xenial/utils/mame-tools)
@@ -24,7 +24,7 @@ applications. It implements a Docker image that includes the following tools:
   * [ZX0](https://github.com/einar-saukas/ZX0)
 
 * MC-10
-  * [mc10-tools 0.11](https://pypi.org/project/mc10-tools/0.11)
+  * [mc10-tools 0.12](https://pypi.org/project/mc10-tools/0.12)
   * [mcbasic](https://github.com/gregdionne/mcbasic)
   * [tasm6801](https://github.com/gregdionne/tasm6801)
 
